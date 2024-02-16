@@ -1,0 +1,6 @@
+.create_user{
+    bottom: 4rem;
+    position: fixed;
+    right: 2.25rem;
+    z-index: 1032;
+}
