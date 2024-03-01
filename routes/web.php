@@ -45,6 +45,9 @@ Route::get('/here', function(){
     return view('layout.Staf.index_');
 });
 
+Route::get('page' , function(){
+    return view('layout.landingpage');
+});
 
 Route::resource('/organisasi/add-jabatan', jabatanController::class)->middleware('auth');
 Route::resource('/ManageUsers', UserController::class)->middleware('auth');
@@ -52,7 +55,8 @@ Route::resource('/manageOrganization', OrganizationController::class)->middlewar
 Route::get('/home', [loginController::class, 'index'])->name('home')->middleware('guest');
 Route::post('/login', [loginController::class, 'authenticate'])->name('login')->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
-Route::get('/profil_user/{id}', [UserController::class, 'profil'])->name('profil_user')->middleware('auth');
+Route::get('/profil_user
+/{id}', [UserController::class, 'profil'])->name('profil_user')->middleware('auth');
 
 Route::get('/dashboard-pimpinan/list-task-by-priority/{id}',[PejabatController::class, 'get_task_by_priority'])->name('get-task-by-priority')->middleware('auth');
 Route::get('/dashboard-pimpinan/list-task-by-status/{id}',[PejabatController::class, 'get_task_by_status'])->name('get-task-by-status')->middleware('auth');

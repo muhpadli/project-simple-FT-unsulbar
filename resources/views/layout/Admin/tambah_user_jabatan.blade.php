@@ -2,6 +2,9 @@
 @section('title')
     Manage Organization | FT Unsulbar
 @endsection
+@section('head')
+    <link rel="stylesheet" href="{{ asset('AdminLTE-3.2.0') }}/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+@endsection
 @section('sidebar')
     @include('layout.Admin.SidebarAdmin')
 @endsection
@@ -11,7 +14,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ $jabatan->name }}</h1>
+                    <h1>Tambah User</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -32,56 +35,49 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-outline card-info">
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover table-striped">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" value="" id="check1">
-                                                <label for="check1"></label>
-                                            </div>
-                                        </td>
-                                        <td class="mailbox-star"><a href="#"><i
-                                                    class="fas fa-star text-warning"></i></a>
-                                        </td>
-                                        <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                        <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to
-                                            this problem...
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" value="" id="check1">
-                                                <label for="check1"></label>
-                                            </div>
-                                        </td>
-                                        <td class="mailbox-star"><a href="#"><i
-                                                    class="fas fa-star text-warning"></i></a>
-                                        </td>
-                                        <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                        <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to
-                                            this problem...
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" value="" id="check1">
-                                                <label for="check1"></label>
-                                            </div>
-                                        </td>
-                                        <td class="mailbox-star"><a href="#"><i
-                                                    class="fas fa-star text-warning"></i></a>
-                                        </td>
-                                        <td class="mailbox-name"><a href="read-mail.html">Alexander Pierce</a></td>
-                                        <td class="mailbox-subject"><b>AdminLTE 3.0 Issue</b> - Trying to find a solution to
-                                            this problem...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="card-header">
+                            Pilihlah user dibawah
+                        </div>
+                        <div class="card-body p-0">
+
+                            <div class="table-responsive mailbox-messages p-0">
+                                <table class="table table-hover table-striped">
+                                    <tbody>
+                                        @forelse ($users as $user)
+                                            <tr class="align-self-center">
+                                                <td style="width: 5rem">
+                                                    <div class="icheck-primary ">
+                                                        <input type="checkbox" value="{{ $user->id }}"
+                                                            id="check{{ $loop->index + 1 }}">
+                                                        <label for="check{{ $loop->index + 1 }}"></label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if ($user->image)
+                                                        <div class="image rounded elevation-1" style="max-width: 50px">
+                                                            <img src="{{ asset('storage/' . $user->image) }}" height="60px"
+                                                                width="50px" alt="">
+                                                        </div>
+                                                    @else
+                                                        <div class="image rounded elevation-1" style="max-width: 50px">
+                                                            <img src="https://source.unsplash.com/400x600/?user"
+                                                                height="60px" width="50px" alt="">
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="mailbox-name ">
+                                                    <p>{{ $user->name }}</p>
+                                                </td>
+                                                <td class="mailbox-subject">{{ $user->email }}
+                                                </td>
+                                                <td class="mailbox-subject">{{ $user->alamat }}
+                                                </td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </div>

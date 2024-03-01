@@ -35,39 +35,14 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
-                        <div class="card-header d-flex">
-                            <div class="col-md-6 align-items-center">
-                                <div class="card-title">
-                                    <h5>{{ $task->title_task }}</h5>
-                                </div>
+                        <div class="card-header d-flex justify-content-space-beween">
+                            <div class="col-11">
+                                <h5>{{ $task->title_task }}</h5>
+                                <p class="small" style="margin: 0; line-height: 5px;">dibuat oleh :
+                                    {{ $task->name_user }} /
+                                    {{ $task->name_jabatan }}</p>
                             </div>
-                            <div class="col-md-6 d-flex justify-content-end  align-items-center">
-                                <span
-                                    class="badge badge-pill bg-{{ $task->bg_color }} p-2 pl-3 pr-3">{{ $task->name_status }}</span>
-                                <span class="ml-2">Priority: {{ $task->name }}</span>
-                            </div>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body p-3 ml-3">
-                            {{ $task->deksripsi }}
-                            @if ($task->keterangan)
-                                <p class="small">Catatan : {{ $task->keterangan }}</p>
-                            @endif
-
-                        </div>
-
-                        <div class="card-footer d-flex">
-                            <div class="col-md-6">
-                                Nama Pimpinan / Jabatan: {{ $task->name_user }} / {{ $task->name_jabatan }}<br>
-                                @php
-                                    if ($task->name == $priority->name) {
-                                        echo 'Tanggal dimulai : -';
-                                    } else {
-                                        echo 'Tanggal dimulai : ' . $task->date_start;
-                                    }
-                                @endphp
-                            </div>
-                            <div class="col-md-6  d-flex justify-content-end align-items-center">
+                            <div class="col-1">
                                 <div class="dropdown">
                                     <button class="btn p-1 btn-sm" type="button" id="dropdownMenuButton"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -89,6 +64,52 @@
                                         @endforeach
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body p-3 ml-3">
+                            <p style="margin: 0; border-bottom: 2px solid rgba(0,0,0,0.2)" class="pb-2">Deskripsi</p>
+                            {{ $task->deksripsi }}
+                            @if ($task->keterangan)
+                                <p class="small">Catatan : {{ $task->keterangan }}</p>
+                            @endif
+                            <h6 class="mt-5">Detail Submitted</h6>
+
+                            <div class="col-md-12">
+                                <table class=" table table-striped table-bordered ml-0 ">
+                                    <tbody>
+                                        <tr>
+                                            <td class="col-3">Link Tugas</td>
+                                            <td class="col-9">
+                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres')
+                                                    {{ 'belum dikumpulkan' }}
+                                                @else
+                                                    {{ $tugas_terkirim->link_tugas }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tanggal Dimulai</td>
+                                            <td class="col-9">
+                                                @if ($task->name_status == 'register')
+                                                    {{ 'belum dimulai' }}
+                                                @else
+                                                    {{ $task->date_start }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Tanggal Selesai</td>
+                                            <td class="col-9">
+                                                @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                                    {{ $tugas_terkirim->waktu_selesai }}
+                                                @else
+                                                    {{ 'belum selesai' }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -122,93 +143,6 @@
                                         <button type="submit" class="btn btn-info float-right">Kirim</button>
                                     </div>
                                 </form>
-                            </div>
-                        </div>
-                        <div class="col-6">
-
-                            <div class="card card-outline card-info">
-                                <div class="card-header">
-                                    <h4 class="card-title">Riwayat Tugas Terkirim</h4>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-striped table-bordered" id="myTable">
-                                        <thead>
-                                            <tr>
-                                                <th class="col-4">Link Tugas</th>
-                                                <th class="col-6">Waktu Selesai</th>
-                                                <th class="col-2 text-center">action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($tugas_terkirim as $item)
-                                                <tr>
-                                                    <td class="col-4"><a href="">{{ $item->link_tugas }}</a></td>
-                                                    <td class="col-6">{{ $item->waktu_selesai }}</td>
-                                                    <td class="col-4">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="dropdown">
-                                                                <button class="btn btn-xs" type="button"
-                                                                    id="dropdownMenuButton" data-toggle="dropdown"
-                                                                    aria-haspopup="true" aria-expanded="false">
-                                                                    <i class="fas fa-ellipsis-h"></i>
-                                                                </button>
-                                                                <div class="dropdown-menu dropdown-menu-right"
-                                                                    aria-labelledby="dropdownMenuButton">
-                                                                    <a class="dropdown-item" href=" ">
-                                                                        <i class="fas fa-info-circle mr-2"></i> Detail
-                                                                    </a>
-                                                                    <a class="dropdown-item" href="#"
-                                                                        data-toggle="modal"
-                                                                        data-target="#hapusModal{{ $item->id }}">
-                                                                        <i class="fas fa-trash-alt mr-2"></i> Hapus
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Modal untuk konfirmasi penghapusan -->
-                                                        <div class="modal fade" id="hapusModal{{ $item->id }}"
-                                                            tabindex="-1" role="dialog"
-                                                            aria-labelledby="hapusModalLabel{{ $item->id }}"
-                                                            aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title"
-                                                                            id="hapusModalLabel{{ $item->id }}">
-                                                                            Konfirmasi
-                                                                            Penghapusan</h5>
-                                                                        <button type="button" class="close"
-                                                                            data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        Apakah Anda yakin ingin menghapus data ini?
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-dismiss="modal">Batal</button>
-                                                                        <!-- Tambahkan form untuk melakukan penghapusan dengan method DELETE -->
-                                                                        <form
-                                                                            action="{{ route('DetailTask.destroy', $item->id) }}"
-                                                                            method="POST">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit"
-                                                                                class="btn btn-danger">Hapus</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                            @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
                             </div>
                         </div>
                     </div>

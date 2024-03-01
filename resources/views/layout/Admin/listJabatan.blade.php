@@ -80,7 +80,8 @@
                                             role="tabpanel" aria-labelledby="vert-tabs-right-{{ $item->id }}-tab">
                                             <div class="row pt-0 m-0 mb-3">
                                                 <div class="btn-group">
-                                                    <a href="#" class="btn btn-default btn-sm">
+                                                    <a href="{{ route('add-jabatan.show', $item->id) }}"
+                                                        class="btn btn-default btn-sm">
                                                         <i class="fas fa-plus"></i>
                                                     </a>
                                                     <button type="button" class="btn btn-default btn-sm"
@@ -111,12 +112,28 @@
                                                                                 class="form-control @error('jabatan') is-invalid @enderror"
                                                                                 required value="{{ $item->name }}"
                                                                                 name="jabatan" id="jabatan">
+                                                                            @error('jabatan')
+                                                                                <div class="alert alert-danger mt-2">
+                                                                                    {{ $message }}
+                                                                                </div>
+                                                                            @enderror
                                                                         </div>
-                                                                        @error('jabatan')
-                                                                            <div class="alert alert-danger mt-2">
-                                                                                {{ $message }}
-                                                                            </div>
-                                                                        @enderror
+                                                                        <div class="form-group">
+                                                                            <label for="role">
+                                                                                Pilih Role
+                                                                            </label>
+                                                                            <select class="form-control" name="role"
+                                                                                id="role" value="{{ old('role') }}">
+                                                                                <option>Pilih Role Jabatan
+                                                                                </option>
+                                                                                @forelse ($roles as $role)
+                                                                                    <option value="{{ $role->id }}"
+                                                                                        {{ $item->role_id === $role->id ? 'selected' : ' ' }}>
+                                                                                        {{ $role->name_role }}</option>
+                                                                                @empty
+                                                                                @endforelse
+                                                                            </select>
+                                                                        </div>
                                                                     </div>
                                                                     <div class="modal-footer justify-content-between">
                                                                         <button type="button" class="btn btn-default"
@@ -207,12 +224,26 @@
                             <label for="jabatan">Nama Jabatan</label>
                             <input type="text" class="form-control @error('jabatan') is-invalid @enderror" required
                                 name="jabatan" id="jabatan">
+                            @error('jabatan')
+                                <div class="alert alert-danger mt-2">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
-                        @error('jabatan')
-                            <div class="alert alert-danger mt-2">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <div class="form-group">
+                            <label for="role">
+                                Pilih Role
+                            </label>
+                            <select class="form-control" name="role" id="role" value="{{ old('role') }}">
+                                <option selected>Pilih Role Jabatan
+                                </option>
+                                @forelse ($roles as $role)
+                                    <option value="{{ $role->id }}">
+                                        {{ $role->name_role }}</option>
+                                @empty
+                                @endforelse
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

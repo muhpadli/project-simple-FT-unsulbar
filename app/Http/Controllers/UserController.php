@@ -158,9 +158,6 @@ class UserController extends Controller
             'nip'       =>  'max:18',
             'kontak'    => 'required|min:11',
             'gender'    => 'required',
-            'organisasi'=> 'required',
-            'jabatan'   => 'required',
-            'image'     => 'image|file|max:2048',
             'email'     => 'required|unique:users|email:dns',
             'alamat'    => 'required|min:4',
             'role'      => 'required',
@@ -190,12 +187,9 @@ class UserController extends Controller
             'username'  => $validated['username'],
             'email'     => $validated['email'],
             'password'  => $validated['password'],
-            'jabatan_id'=> $validated['jabatan'],
             'genders_id'=> $validated['gender'],
             'roles_id'  => $validated['role'],
             'profil_id' => $latestId,
-            'image'     => $validated['image']
-
         ]);
         Alert::success('Good Job', 'User baru berhasil ditambahkan!');
         return redirect()->route('dashboard');

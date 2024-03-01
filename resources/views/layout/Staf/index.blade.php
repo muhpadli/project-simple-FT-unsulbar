@@ -4,6 +4,18 @@
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        .card-header ul {
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .card-header ul li {
+            list-style: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
 @endsection
 @section('sidebar')
     @include('layout.Sidebar')
@@ -32,28 +44,45 @@
                 <div class="col-12">
                     <div class="card card-outline card-info ">
                         <!-- /.card-header -->
+                        <div class="card-header">
+                            <ul>
+                                @foreach ($prioritas_status as $item)
+                                    <li>
+                                        <div class="text-{{ $item->bg_color }}"><i class="fas fa-square"></i>
+                                            <span style="color: black">{{ Str::ucfirst($item->name_status) }}</span>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        <!-- /.card-body -->
                         <div class="card-body ">
-                            <table class="table table-striped" id="myTable">
+                            <table class="table table-striped table-hover" id="myTable">
                                 <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Judul</th>
                                         <th>Deksripsi</th>
                                         <th>Tugas dari</th>
-                                        <th>Status</th>
                                         <th>Prioritas</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($task as $item)
+                                        {{-- table row --}}
                                         <tr>
+                                            {{-- table data --}}
+                                            <td>
+                                                <span class="text-{{ $item->bg_color }}">
+                                                    <i class="fas fa-square"></i>
+                                                </span>
+                                            </td>
                                             <td>{{ $item->title_task }}</td>
                                             <td>{{ $item->excerpt }}</td>
                                             <td>{{ $item->department_name }}</td>
-                                            <td><span class="badge bg-{{ $item->bg_color }} p-1"
-                                                    style="width: 75px">{{ $item->name_status }}</span></td>
                                             <td><span class="badge bg-{{ $item->bg_warna }} p-1"
-                                                    style="width: 75px">{{ $item->name }}</span></td>
+                                                    style="width: 75px;">{{ $item->name }}</span></td>
                                             <td>
                                                 <div class="d-flex justify-content-center">
                                                     <div class="dropdown">

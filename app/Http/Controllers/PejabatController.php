@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Profil;
 use App\Models\riwayat_tugas;
+use App\Models\Role;
 use App\Models\Status;
 use App\Models\Task;
 use App\Models\User;
@@ -205,13 +206,15 @@ class PejabatController extends Controller
         ->orderBy('users.updated_at', 'desc')
         ->where('jabatans.organisasi_id','=',$id)
         ->get();
+        $roles = Role::all();
         $data_jabatan = jabatan::all()->where('organisasi_id', '=', $id);
         return view('layout.Admin.listJabatan',[
             'organisasi'=> $organisasi,
             'users'     => $users,
             'user'      => $user,
             'active'    => 'manageOrganisasi',
-            'data'      => $data_jabatan      
+            'data'      => $data_jabatan, 
+            'roles'     => $roles     
         ]);
     }
    

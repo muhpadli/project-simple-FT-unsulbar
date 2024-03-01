@@ -96,52 +96,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    {{-- Form Organisasi --}}
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>Organisasi</label>
-                                            <select class="form-control" name="organisasi" id="organisasi">
-                                                <option selected>---Pilih Organisasi---</option>
-                                                @forelse ($organization as $value)
-                                                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                                                @empty
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {{-- Form Jabatan --}}
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>Jabatan</label>
-                                            <select class="form-control" name="jabatan" id="jabatan">
-                                                <option selected>---Pilih Jabatan---</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                {{-- Form Gambar --}}
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label for="image">Gambar</label>
-                                            <div class="input-group mb-3">
-                                                <div class="custom-file">
-                                                    <label class="custom-file-label" for="image">Choose
-                                                        file</label>
-                                                    <input type="file"
-                                                        class="custom-file-input  @error('image') is-invalid @enderror"
-                                                        id="image" aria-describedby="inputGroupFileAddon01"
-                                                        name="image">
-                                                </div>
-                                            </div>
-                                            @error('image')
-                                                <div class="alert alert-danger mt-2">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    {{-- Form Email --}}
                                     <div class="col">
                                         <div class="form-group">
                                             <label for="exampleEmail">Email</label>
@@ -169,7 +123,6 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

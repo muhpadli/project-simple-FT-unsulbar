@@ -48,10 +48,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- /.content-header -->
 
             <!-- Main content -->
-            <div class="content ">
+            <div class="content">
                 <div class="container ">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-9 mt-5">
+                    <div class="row d-flex justify-content-center align-items-center" style="height: 680px">
+                        <div class="col-9">
                             <!-- /.login-logo -->
                             <div class="card card-outline card-info">
                                 <div class="card-header text-center protest-guerrilla-regular">
@@ -116,10 +116,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                     <!-- /.col -->
                                                 </div>
                                             </form>
-                                            <!-- /.social-auth-links -->
-                                            <p class="mb-1">
-                                                <a href="forgot-password.html">I forgot my password</a>
-                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-6">

@@ -177,7 +177,7 @@ class stafController extends Controller
         $prioritas_status = Status::all();
         $prioritas_tugas = Priority::all();
         $priority = Priority::all()->first;
-        $riwayat_tugas = riwayat_tugas::all()->where('tugas_id','=',$id);
+        $riwayat_tugas = riwayat_tugas::where('tugas_id','=',$id)->get()->first();
         $status   = DB::table('statuses')
         ->select('*')
         ->where('role_id','=',3)

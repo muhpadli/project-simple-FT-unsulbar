@@ -2,6 +2,13 @@
 @section('title')
     Dashboard | FT Unsulbar
 @endsection
+@section('head')
+    <style>
+        .info-box:hover {
+            border-right: 5px solid #17a2b8;
+        }
+    </style>
+@endsection
 @section('sidebar')
     @include('layout.Admin.SidebarAdmin')
 @endsection
