@@ -3,6 +3,7 @@
     Detail Tugas | FT Unsulbar
 @endsection
 @section('head')
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 @endsection
 @section('sidebar')
@@ -38,7 +39,7 @@
                         <div class="card-header d-flex justify-content-space-beween">
                             <div class="col-11">
                                 <h5>{{ $task->title_task }}</h5>
-                                <p class="small" style="margin: 0; line-height: 5px;">dibuat oleh :
+                                <p class="small" style="margin: 0; line-height: 5px;">created by :
                                     {{ $task->name_user }} /
                                     {{ $task->name_jabatan }}</p>
                             </div>
@@ -68,30 +69,86 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-3 ml-3">
-                            <p style="margin: 0; border-bottom: 2px solid rgba(0,0,0,0.2)" class="pb-2">Deskripsi</p>
-                            {{ $task->deksripsi }}
+                            <h5 style="margin: 0; border-bottom: 1px solid rgba(0,0,0,0.2)" class="pb-2">Deskripsi</h5>
+                            <p style="text-align: justify">{{ $task->deksripsi }}</p>
                             @if ($task->keterangan)
                                 <p class="small">Catatan : {{ $task->keterangan }}</p>
                             @endif
-                            <h6 class="mt-5">Detail Submitted</h6>
 
+                            <div class="mt-3 ">
+                                @if ($task->name_status == 'register')
+                                    {{-- aksi saat status masih register --}}
+                                    <div class="" style="display: inline-flex">
+                                        <form action="{{ route('pending_tugas', $task->id) }}" method="post">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-warning mr-2">Pending</button>
+                                        </form>
+                                        <form action="{{ route('start_working_task', $task->id) }}" method="post">
+                                            @csrf
+                                            @method('PUT')
+                                            <button type="submit" class="btn btn-primary">Start Working</button>
+                                        </form>
+                                    </div>
+                                @elseif ($task->name_status == 'on progres')
+                                    <form action="{{ route('riwayat_tugas.store') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="tugas_id" value="{{ $task->id }}">
+                                        <div class="form-group">
+                                            <label for="taskDescription" class="form-label">Link Google Drive</label>
+                                            <input class="form-control @error('link_tugas') is-invalid @enderror "
+                                                id="link_tugas" name="link_tugas" placeholder="Link Google Drive" required>
+                                            @error('link_tugas')
+                                                <div class="alert alert-danger mt-2">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Isi Keterangan</label>
+                                            <textarea class="form-control @error('content') is-invalid @enderror" id="editor" name="content" rows="5"
+                                                placeholder="Tambahkan keterangan (opsional)"></textarea>
+
+                                            <!-- error message untuk content -->
+                                            @error('content')
+                                                <div class="alert alert-danger mt-2">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
+                                        <button type="submit" class="btn btn-info mt-3">Submit Tugas</button>
+                                    </form>
+                                @elseif ($task->name_status == 'pending')
+                                    <a href="" class="btn btn-primary">Start Working</a>
+                                @else
+                                    <div class=""></div>
+                                @endif
+                            </div>
+                            <h5 class="mt-3" style="border-bottom: 1px solid rgba(0,0,0,0.2)">Detail Submitted</h5>
                             <div class="col-md-12">
                                 <table class=" table table-striped table-bordered ml-0 ">
                                     <tbody>
                                         <tr>
                                             <td class="col-3">Link Tugas</td>
                                             <td class="col-9">
-                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres')
-                                                    {{ 'belum dikumpulkan' }}
+                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres' || $task->name_status == 'pending')
+                                                    {{ 'belum ada' }}
                                                 @else
                                                     {{ $tugas_terkirim->link_tugas }}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="col-3">Status</td>
+                                            <td class="col-9">
+                                                {{ $task->name_status }}
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="col-3">Tanggal Dimulai</td>
                                             <td class="col-9">
-                                                @if ($task->name_status == 'register')
+                                                @if ($task->name_status == 'register' || $task->name_status == 'pending')
                                                     {{ 'belum dimulai' }}
                                                 @else
                                                     {{ $task->date_start }}
@@ -113,45 +170,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6"><!-- /.card-body -->
-                            <div class="card card-outline card-info">
-                                <div class="card-header d-flex justify-content-between">
-                                    <h4 class="card-title">Kirim Tugas</h4>
-                                </div>
-                                <!-- /.card-header -->
-                                <form action="{{ route('riwayat_tugas.store') }}" method="post">
-                                    @csrf
-                                    <div class="card-body p-3">
-                                        <div class="mb-3">
-                                            <input type="hidden" name="tugas_id" value="{{ $task->id }}">
-                                            <label for="taskDescription" class="form-label">Link Google Drive</label>
-                                            <input
-                                                class="form-control @error('linnk_tugas') is-invalid                                        
-                                        @enderror"
-                                                id="link_tugas" name="link_tugas" placeholder="Link Google Drive"
-                                                {{ $task->name_status == 'register' ? 'disabled' : '' }} required
-                                                autofocus>
-                                            @error('link_tugas')
-                                                <div class="alert alert-danger mt-2">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button type="submit" class="btn btn-info float-right">Kirim</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 @endsection
 @section('script')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
     <script>

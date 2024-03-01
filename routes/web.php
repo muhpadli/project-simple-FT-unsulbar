@@ -70,6 +70,10 @@ Route::get('/user_staf/detail-tugas',[stafController::class, 'details'])->name('
 Route::get('/user_staf/detail-tugas-status/{id}', [stafController::class, 'getTugas'])->name('detail-where-staus')->middleware('auth');
 Route::get('/user_staf/detail-tugas-priority/{id}', [stafController::class, 'getFilter'])->name('detail-where-priority')->middleware('auth');
 Route::resource('/user_staf',stafController::class)->middleware('auth');
+// route button pending
+Route::put('/pending_tugas/{id}', [stafController::class, 'pending_task'])->name('pending_tugas');
+// route button star working
+Route::put('/start_working/{id}', [stafController::class, 'start_working_task'])->name('start_working_task');
 
 
 Route::get('/jabatan/{id}', [UserController::class, 'getJabatan']);

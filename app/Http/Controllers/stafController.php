@@ -218,5 +218,32 @@ class stafController extends Controller
             'prioritas_status'  => $prioritas_status
         ]);
     }
+
+    public function pending_task($id){
+        $status_id = 3;
+        $task = Task::findOrFail($id);
+        $task->update([
+            'status_id' => $status_id
+        ]);
+
+        Alert::success('Good Job', 'Tugas Berhasil dipending');
     
+        return redirect()->route('user_staf.show', $id);
+
+    }
+    
+    public function start_working_task($id){
+        $status_id = 2;
+        $task = Task::findOrFail($id);
+        $date_start  = Carbon::now('Asia/Makassar');
+        $task->update([
+            'status_id' => $status_id,
+            'date_start'    => $date_start
+        ]);
+
+        Alert::success('Good Job', 'Tugas Siap Dikerjakan');
+    
+        return redirect()->route('user_staf.show', $id);
+
+    }
 }
