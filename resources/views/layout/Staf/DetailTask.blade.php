@@ -36,43 +36,21 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
-                        <div class="card-header d-flex justify-content-space-beween">
-                            <div class="col-11">
+                        <div class="card-header">
+                            <div class="col-12">
                                 <h5>{{ $task->title_task }}</h5>
                                 <p class="small" style="margin: 0; line-height: 5px;">created by :
                                     {{ $task->name_user }} /
-                                    {{ $task->name_jabatan }}</p>
-                            </div>
-                            <div class="col-1">
-                                <div class="dropdown">
-                                    <button class="btn p-1 btn-sm" type="button" id="dropdownMenuButton"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                        style="color: blue">
-                                        ubah status
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        @foreach ($status as $item)
-                                            <form action="{{ route('user_staf.update', $task->id) }}" method="post">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="hidden" value="{{ $item->id }}" name="status_id">
-                                                <button type="submit" class="dropdown-item">{{ $item->name_status }}
-                                                    @if ($loop->index < 2)
-                                                        <div class="dropdown-divider"></div>
-                                                    @endif
-                                                </button>
-                                            </form>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                    {{ $task->name_jabatan }}
+                                </p>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-3 ml-3">
                             <h5 style="margin: 0; border-bottom: 1px solid rgba(0,0,0,0.2)" class="pb-2">Deskripsi</h5>
-                            <p style="text-align: justify">{{ $task->deksripsi }}</p>
+                            <p style="text-align: justify">{!! $task->deksripsi !!}</p>
                             @if ($task->keterangan)
-                                <p class="small">Catatan : {{ $task->keterangan }}</p>
+                                <p class="small">Note : {{ $task->keterangan }}</p>
                             @endif
 
                             <div class="mt-3 ">
@@ -90,7 +68,7 @@
                                             <button type="submit" class="btn btn-primary">Start Working</button>
                                         </form>
                                     </div>
-                                @elseif ($task->name_status == 'on progres')
+                                @elseif ($task->name_status == 'on progres' || $task->name_status == 'revisi')
                                     <form action="{{ route('riwayat_tugas.store') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="tugas_id" value="{{ $task->id }}">
@@ -106,7 +84,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Isi Keterangan</label>
-                                            <textarea class="form-control @error('content') is-invalid @enderror" id="editor" name="content" rows="5"
+                                            <textarea class="form-control @error('content') is-invalid @enderror" id="editor" name="keterangan" rows="5"
                                                 placeholder="Tambahkan keterangan (opsional)"></textarea>
 
                                             <!-- error message untuk content -->
@@ -116,13 +94,14 @@
                                                 </div>
                                             @enderror
                                         </div>
-
                                         <button type="submit" class="btn btn-info mt-3">Submit Tugas</button>
                                     </form>
                                 @elseif ($task->name_status == 'pending')
                                     <a href="" class="btn btn-primary">Start Working</a>
-                                @else
-                                    <div class=""></div>
+                                @elseif ($task->name_status == 'finish')
+                                    <div class="alert alert-info">
+                                        Tugas belum divalidasi pimpinan!
+                                    </div>
                                 @endif
                             </div>
                             <h5 class="mt-3" style="border-bottom: 1px solid rgba(0,0,0,0.2)">Detail Submitted</h5>
@@ -146,7 +125,13 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Tanggal Dimulai</td>
+                                            <td class="col-3">Priority</td>
+                                            <td class="col-9">
+                                                {{ $task->name }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Date Started</td>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'register' || $task->name_status == 'pending')
                                                     {{ 'belum dimulai' }}
@@ -156,12 +141,22 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Tanggal Selesai</td>
+                                            <td class="col-3">Due Date</td>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
                                                     {{ $tugas_terkirim->waktu_selesai }}
                                                 @else
                                                     {{ 'belum selesai' }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-3">Keterangan</td>
+                                            <td class="col-9">
+                                                @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                                    {!! $tugas_terkirim->keterangan !!}
+                                                @else
+                                                    {{ '-' }}
                                                 @endif
                                             </td>
                                         </tr>

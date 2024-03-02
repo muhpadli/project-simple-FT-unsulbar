@@ -14,15 +14,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Detail Tugas <span class="badge"><a href="{{ route('DetailTask.edit', $task->id) }}"
+                    <h1>Detail Task <span class="badge"><a href="{{ route('DetailTask.edit', $task->id) }}"
                                 class="btn btn-info btn-sm "> <i class="fa fa-edit"></i> Edit</a></span></h1>
 
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Daftar Tugas</a></li>
-                        <li class="breadcrumb-item active">Detail Tugas</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">List Tasks</a></li>
+                        <li class="breadcrumb-item active">Detail Task</li>
                     </ol>
                 </div>
             </div>
@@ -38,137 +38,71 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
-                        <div class="card-header d-flex justify-content-between">
-                            <div class="col-md-6">
-                                <div class="card-title">{{ $task->title_task }}
+                        <div class="card-header " style="margin-bottom: 0; line-height: 5px">
+                            <div class="col-12 ">
+                                <h5 style="font-weight: 700" class="ml-0">{{ $task->title_task }}</h5>
+                                <div>
+                                    <p class="small" style="margin: 0; line-height: 5px;">Author Staff by :
+                                        {{ $task->name_user }}/
+                                        {{ $task->name_jabatan }}</p>
                                 </div>
-                            </div>
-                            <div class="col-md-6 d-flex justify-content-end align-items-center">
-                                <span
-                                    class="badge badge-pill bg-{{ $task->bg_warna }} p-2 pr-3 pl-3">{{ $task->name_status }}</span>
-
-                                <span class="ml-2">Priority : {{ $task->name }}</span>
                             </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body ">
-                            <p class="pl-2">
-                                {{ $task->deksripsi }}
-                            </p>
+                            <h5 class="subtitle pb-2" style="border-bottom: 1px solid rgba(0, 0, 0, 0.2); font-weight: 600">
+                                Description
+                            </h5>
+                            <p class="ml-2">{!! $task->deksripsi !!}</p>
                             @if ($task->keterangan)
-                                <p class="small pl-2 pt-0">Catatan : {{ $task->keterangan }}</p>
+                                <p class="small pl-2 pt-0">Note : {{ $task->keterangan }}</p>
                             @endif
-
-                        </div>
-                        <div class="card-footer d-md-flex justify-content-between">
-                            <div class="col-md-6">
-                                <p class="mb-0 small">
-                                    Nama/jabatan: {{ $task->name_user }}/ {{ $task->name_jabatan }}<br>
-                                    @php
-                                        if ($task->name == $priority->name) {
-                                            echo 'Date Started : -';
-                                        } else {
-                                            echo 'Date Started : ' . $task->date_start;
-                                        }
-                                    @endphp
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-info">
-                        <div class="card-header">
-                            <div class="card-title">Tugas diserahkan
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-striped " id="datatable">
-                                <thead>
+                            <div class="submitted">
+                                <h5 class=" pb-2" style="border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700">
+                                    Submission status
+                                </h5>
+                                <table class="table table-bordered table-striped table-hover">
                                     <tr>
-                                        <th class="col-2">Link Tugas</th>
-                                        <th class="col-7">Waktu Selesai</th>
-                                        <th class="col-3 text-center">action</th>
+                                        <th class="col-3">Submission Status</th>
+                                        <td class="col-9">{{ Str::ucfirst($task->name_status) }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($tugas_terkirim as $item)
-                                        <tr>
-                                            <td class="col-2"><a href="">{{ $item->link_tugas }}</a></td>
-                                            <td class="col-7">{{ $item->waktu_selesai }}</td>
-                                            <td class="col-3">
-                                                <div class="d-flex justify-content-center mt-2">
-                                                    <div class="dropdown">
-                                                        <button class="btn p-1 btn-xs" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fas fa-ellipsis-h"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-right"
-                                                            aria-labelledby="dropdownMenuButton">
-                                                            @foreach ($status as $item)
-                                                                <form
-                                                                    action="{{ route('dashboard_pejabat.update', $task->id) }}"
-                                                                    method="post">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <input type="hidden" value="{{ $item->id }}"
-                                                                        name="status_id">
-                                                                    <button type="submit"
-                                                                        class="dropdown-item">{{ $item->name_status }}
-                                                                        @if ($loop->index < 2)
-                                                                            <div class="dropdown-divider"></div>
-                                                                        @endif
-                                                                    </button>
-                                                                </form>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Modal untuk konfirmasi penghapusan -->
-                                                <div class="modal fade" id="hapusModal{{ $item->id }}" tabindex="-1"
-                                                    role="dialog" aria-labelledby="hapusModalLabel{{ $item->id }}"
-                                                    aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="hapusModalLabel{{ $item->id }}">Konfirmasi
-                                                                    Penghapusan</h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Apakah Anda yakin ingin menghapus data ini?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <!-- Tambahkan form untuk melakukan penghapusan dengan method DELETE -->
-                                                                <form action="{{ route('DetailTask.destroy', $item->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger">Hapus</button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                    <tr>
+                                        <th class="col-3">Date Started</th>
+                                        @if ($task->name_status == 'register' || $task->name_status == 'pending')
+                                            <td class="col-9">Not Started</td>
+                                        @else
+                                            <td class="col-9">{{ $task->date_start }}</td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <th class="col-3">Completed Time</th>
+                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                            <td class="col-9">{{ $tugas_terkirim->waktu_selesai }}</td>
+                                        @else
+                                            <td class="col-9">Not Completed</td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <th class="col3">Link Task</th>
+                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                            <td class="col-9"><a
+                                                    href="{{ $tugas_terkirim->link_tugas }}">{{ $tugas_terkirim->link_tugas }}</a>
                                             </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                        @else
+                                            <td class="col-9">{{ 'Not Link Task' }}</td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <th class="col-3">Description Task</th>
+                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                            <td class="col-9">{!! $tugas_terkirim->keterangan !!}</td>
+                                        @else
+                                            <td class="col-9">{{ 'Not Link Task' }}</td>
+                                        @endif
+                                    </tr>
+
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

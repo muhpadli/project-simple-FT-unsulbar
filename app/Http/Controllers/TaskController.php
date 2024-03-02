@@ -73,7 +73,7 @@ class TaskController extends Controller
         ->select('*')
         ->where('role_id','=',2)
         ->get();
-        $riwayat_tugas = riwayat_tugas::all()->where('tugas_id','=',$id);
+        $riwayat_tugas = riwayat_tugas::where('tugas_id','=',$id)->get()->first();
         $prioritas_tugas = Priority::all();
         $prioritas_status = Status::all();
         $tugas  = DB::table('tasks')
