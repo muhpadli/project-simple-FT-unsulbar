@@ -18,11 +18,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Beranda</h1>
+                    <h1>Dashboard</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">Beranda</li>
+                        <li class="breadcrumb-item">Dashboard</li>
                     </ol>
                 </div>
             </div>
@@ -39,12 +39,13 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Total Organisasi</span>
-                            <span class="info-box-number">{{ $Organization->count() }}</span>
+                            <span class="info-box-number"><a href="{{ route('organisasi') }}" style="color: black">{{ $Organization->count() }}</a></span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- /.info-box -->
                 </div>
+
 
                 <div class="col-md-4 col-sm-6 col-12">
                     <div class="info-box shadow-small">
@@ -52,7 +53,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Total users</span>
-                            <span class="info-box-number">{{ $users->count() }}</span>
+                            <span class="info-box-number"><a href="{{ route('ManageUsers.index') }}" style="color: black">{{ $users->count() }}</a></span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>

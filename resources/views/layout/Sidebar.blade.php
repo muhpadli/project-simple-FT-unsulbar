@@ -13,66 +13,40 @@
                     <a @if (auth()->user()->roles_id == 2) href="{{ route('dashoard-pimpinan') }}" @else  href="{{ route('user_staf.index') }}" @endif
                         class="nav-link {{ $active === 'beranda' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
-                        <p>Beranda
+                        <p>Dashboard
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a @if (auth()->user()->roles_id == 2) href="{{ route('dashboard_pejabat.index') }}" @else  href="{{ route('details-tugas-staf') }}" @endif
-                        class="nav-link {{ $active === 'task' ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-list"></i>
-                        <p>List Tugas
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item {{ $active === 'filter-priority' ? 'menu-open' : ' ' }}">
-                    <a class="nav-link {{ $active === 'filter-priority' ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-filter"></i>
-                        <p>
-                            Filter By Prioritas
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview bg-gray">
-                        @foreach ($prioritas_tugas as $key => $item)
-                            <li class="nav-item">
-                                <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-priority', $key + 1) }}"
-                                    @else
-                                        href="{{ route('detail-where-priority', $key + 1) }}" @endif
-                                    class="nav-link small " style="color: white">
-                                    <p>{{ Str::ucfirst($item->name) }}</p>
-                                    @if ($priority === Str::lower($item->name))
-                                        <i class='nav-icon float-right fa fa-check-circle'></i>
-                                    @endif
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </li>
-                <li class="nav-item {{ $active === 'filter-status' ? 'menu-open' : ' ' }}">
-                    <a class="nav-link {{ $active === 'filter-status' ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-filter"></i>
-                        <p>
-                            Filter By Status
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview bg-gray">
-                        @foreach ($prioritas_status as $key => $item)
-                            <li class="nav-item">
-                                <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-status', $key + 1) }}"
-                                    @else
-                                        href="{{ route('detail-where-staus', $key + 1) }}" @endif
-                                    class="nav-link small " style="color: white">
-                                    <p>{{ Str::ucfirst($item->name_status) }}</p>
-                                    @if ($priority === $item->name_status)
-                                        <i class='nav-icon float-right fa fa-check-circle'></i>
-                                    @endif
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </li>
+                @if (auth()->user()->level_user_id == 1)
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard_pejabat.index') }}"
+                            class="nav-link {{ $active === 'task' ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Task Duties</p>
+                        </a>
+                    </li>
+                @elseif (auth()->user()->level_user_id == 2)
+                    <li class="nav-item">
+                        <a href="{{ route('dashboard_pejabat.index') }}" class="nav-link">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>Task Duties</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('details-tugas-staf') }}" class="nav-link">
+                            <i class="nav-icon fas fa-pen"></i>
+                            <p>My Tasks</p>
+                        </a>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a href="{{ route('details-tugas-staf') }}"
+                            class="nav-link {{ $active === 'task' ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-pen"></i>
+                            <p>My Tasks</p>
+                        </a>
+                    </li>
+                @endif
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -32,12 +32,16 @@ class TaskController extends Controller
         $priority   = Priority::all();
         $prioritas_tugas = Priority::all();
         $prioritas_status = Status::all();
+        $jabatan = jabatan::all()->where('id', '!=', auth()->user()->jabatan_id);
+        $position = jabatan::where('id','=',auth()->user()->jabatan_id)->get()->first();
         return view('layout.Pejabat.newTask',[
             'department'    => $department,
             'priority'      => $priority,
             'active'        => 'none',
             'prioritas_status'  => $prioritas_status,
             'prioritas_tugas'  => $prioritas_tugas,
+            'position'      => $position,
+            'jabatan'       => $jabatan
         ]
     );
     }
@@ -152,7 +156,7 @@ class TaskController extends Controller
     
         Alert::success('Good Job', 'Tugas berhasil diperbarui!');
     
-        return redirect()->route('dashboard_pejabat.index');
+        return redirect()->route('DetailTask.show',$id);
     }
     
     public function destroy($id){
@@ -164,11 +168,36 @@ class TaskController extends Controller
     }
 
     public function getJabatan($id){
-        $jabatan = jabatan::where("organisasi_id",$id)->get();
+        $jabatan = jabatan::where([
+            ["organisasi_id",$id],
+            ["id",'!=', auth()->user()->jabatan_id]
+        ])->get();
         return response()->json($jabatan);
     }
     public function getUser($id){
         $user = User::where("jabatan_id",$id)->get();
         return response()->json($user);
+    }
+
+    public function getTaskByPriority(){
+        $task = Task::all()->where('id_creator', '=', auth()->user()->id);
+        $count = [0,0,0,0,0,0];
+        foreach ($task as $key => $value) {
+            if($value->status_id == "1") {
+                $count[0]+=1;
+            }else if($value->status_id == "2"){
+                $count[1]+=1;
+            }else if($value->status_id == "3"){
+                $count[2]+=1;
+            }else if($value->status_id == "4"){
+                $count[3]+=1;
+            }else if($value->status_id == "5"){
+                $count[4]+=1;
+            }else if($value->status_id == "6"){
+                $count[5]+=1;
+            }
+        }
+        return response()->json($count);
+        
     }
 }

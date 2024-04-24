@@ -1,16 +1,17 @@
 @extends('Master')
 @section('title')
-    Dashboard Staf | FT Unsulbar
+    My Task | FT Unsulbar
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <style>
-        .card-header ul {
+        tfoot tr th ul {
+
             margin: 0;
             padding-left: 0;
         }
 
-        .card-header ul li {
+        tfoot tr th ul li {
             list-style: none;
             display: inline-block;
             margin-right: 10px;
@@ -25,12 +26,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Daftar Tugas</h1>
+                    <h1>My Tasks</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Beranda</a></li>
-                        <li class="breadcrumb-item active">Daftar Tugas</li>
+                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">My Tasks</li>
                     </ol>
                 </div>
             </div>
@@ -41,31 +42,17 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
+                <div class="col-md-8">
                     <div class="card card-outline card-info ">
-                        <!-- /.card-header -->
-                        <div class="card-header">
-                            <ul>
-                                @foreach ($prioritas_status as $item)
-                                    <li>
-                                        <div class="text-{{ $item->bg_color }}"><i class="fas fa-square"></i>
-                                            <span style="color: black">{{ Str::ucfirst($item->name_status) }}</span>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
                         <!-- /.card-body -->
                         <div class="card-body ">
                             <table class="table table-striped table-hover" id="myTable">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Judul</th>
-                                        <th>Deksripsi</th>
-                                        <th>Tugas dari</th>
-                                        <th>Prioritas</th>
-                                        <th>Aksi</th>
+                                        <th class="d-flex justify-content-center">Priority</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,77 +61,102 @@
                                         <tr>
                                             {{-- table data --}}
                                             <td>
-                                                <span class="text-{{ $item->bg_color }}">
+                                                <span class="text-{{ $item->bg_warna }} d-flex justify-content-center">
                                                     <i class="fas fa-square"></i>
                                                 </span>
                                             </td>
                                             <td>{{ $item->title_task }}</td>
-                                            <td>{{ $item->excerpt }}</td>
-                                            <td>{{ $item->department_name }}</td>
-                                            <td><span class="badge bg-{{ $item->bg_warna }} p-1"
-                                                    style="width: 75px;">{{ $item->name }}</span></td>
+                                            <td><span class="badge bg-{{ $item->bg_color }} p-1"
+                                                    style="width: 75px;">{{ $item->name_status }}</span></td>
                                             <td>
-                                                <div class="d-flex justify-content-center">
-                                                    <div class="dropdown">
-                                                        <button class="btn p-1 btn-xs" type="button"
-                                                            id="dropdownMenuButton" data-toggle="dropdown"
-                                                            aria-haspopup="true" aria-expanded="false">
-                                                            <i class="fas fa-ellipsis-h"></i>
-                                                        </button>
-                                                        <div class="dropdown-menu dropdown-menu-right"
-                                                            aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item"
-                                                                href="{{ route('user_staf.show', $item->id) }}">
-                                                                <i class="fas fa-info-circle mr-2"></i> Detail
-                                                            </a>
-                                                            <a class="dropdown-item" href="#" data-toggle="modal"
-                                                                data-target="#hapusModal{{ $item->id }}">
-                                                                <i class="fas fa-trash-alt mr-2"></i> Hapus
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Modal untuk konfirmasi penghapusan -->
-                                                <div class="modal fade" id="hapusModal{{ $item->id }}" tabindex="-1"
-                                                    role="dialog" aria-labelledby="hapusModalLabel{{ $item->id }}"
-                                                    aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="hapusModalLabel{{ $item->id }}">Konfirmasi
-                                                                    Penghapusan</h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                Apakah Anda yakin ingin menghapus data ini?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Batal</button>
-                                                                <!-- Tambahkan form untuk melakukan penghapusan dengan method DELETE -->
-                                                                <form action="{{ route('DetailTask.destroy', $item->id) }}"
-                                                                    method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit"
-                                                                        class="btn btn-danger">Hapus</button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <a href="{{ route('user_staf.show', $item->id) }}"
+                                                    class="badge badge-primary p-1 btn-sm">
+                                                    <i class="fas fa-eye ml-2 mr-2">View</i>
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4">
+                                            <ul>
+                                                @foreach ($prioritas_tugas as $item)
+                                                    <li>
+                                                        <div class="text-{{ $item->bg_color }}">
+                                                            <i class="fas fa-square"></i>
+                                                            <span
+                                                                style="color: black">{{ Str::ucfirst($item->name) }}</span>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-outline card-info p-2">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa fa-filter"></i>FILTER</div>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                                data-accordion="false">
+                                <li class="nav-item {{ $active === 'filter-priority' ? 'menu-open' : ' ' }}">
+                                    <a href=""
+                                        class="nav nav-link {{ $active === 'filter-priority' ? 'active' : '' }}"
+                                        style="font-weight: bold;">
+                                        Priority <i class="right fas fa-angle-left"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview"
+                                        style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                        @foreach ($prioritas_tugas as $key => $item)
+                                            <li>
+                                                <a href="{{ route('detail-where-priority', $key + 1) }}"
+                                                    class="nav-link small ">
+                                                    <span style="display: flexbox; justify-content: center;">
+                                                        <p class="text-dark">{{ Str::ucfirst($item->name) }} @if ($priority === Str::lower($item->name))
+                                                                <i class=' fa fa-check-circle'></i>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                                <li class="nav-item  {{ $active === 'filter-status' ? 'menu-open' : ' ' }}">
+                                    <a href="" class="nav-link {{ $active === 'filter-status' ? 'active' : '' }}"
+                                        style="font-weight: bold;">
+                                        status
+                                        <i class="right fas fa-angle-left"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview"
+                                        style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                        @foreach ($prioritas_status as $key => $item)
+                                            <li>
+                                                <a href="{{ route('detail-where-staus', $key + 1) }}"
+                                                    class="nav-link small">
+                                                    <span style="display: flexbox; justify-content: center;">
+                                                        <p class="text-dark">{{ Str::ucfirst($item->name_status) }}
+                                                            @if ($priority === $item->name_status)
+                                                                <i class='fa fa-check-circle'></i>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

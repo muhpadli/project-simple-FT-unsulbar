@@ -18,8 +18,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Daftar Tugas</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Task Duties</a></li>
                         <li class="breadcrumb-item active">New Task</li>
                     </ol>
                 </div>
@@ -35,45 +35,51 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
-                        <form action="{{ route('DetailTask.store') }}" method="post">
+                        <form action="{{ route('DetailTask.store') }}" id="frm" method="post">
                             @csrf
                             <div class="card-body row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <div class="col"> <!-- Tambahkan kelas mb-0 di sini -->
-                                            <label class="col-form-label">Select
-                                                Department</label>
-                                            <select class="form-control" id="department" name="department">
-                                                <option>Select Organization</option>
-                                                @foreach ($department as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col">
-                                            <label class="col-form-label">Select Position</label>
-                                            <select class="form-control" id="sub_department" name="sub_department">
-                                                <option>Select Position</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col">
-                                                <label class="col-form-label">Select User</label>
-                                                <select class="form-control" id="user_id" name="user_id">
-                                                    <option>Select User</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col">
-                                                <label class="col-form-label">Priority</label>
-                                                <select class="form-control" id="priority_id" name="priority_id">
-                                                    <option>Select Priority</option>
-                                                    @foreach ($priority as $item)
+                                        @if (auth()->user()->level_user_id == 1)
+                                            <div class="col"> <!-- Tambahkan kelas mb-0 di sini -->
+                                                <label class="col-form-label">Select
+                                                    Department</label>
+                                                <select class="form-control" id="department" name="department">
+                                                    <option>Select Organization</option>
+                                                    @foreach ($department as $item)
                                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
+                                        @else
+                                            <input type="hidden" name="department_id" id="department"
+                                                value="{{ $position->organisasi_id }}">
+                                        @endif
+                                        <div class="col">
+                                            <label class="col-form-label">Select Position</label>
+                                            <select class="form-control" id="sub_department" name="sub_department">
+                                                <option>Select Position</option>
+                                                @if (auth()->user()->level_user_id == 2)
+                                                    @foreach ($jabatan->where('organisasi_id', '=', $position->organisasi_id, ) as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label">Select User</label>
+                                            <select class="form-control" id="user_id" name="user_id">
+                                                <option>Select User</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label">Priority</label>
+                                            <select class="form-control" id="priority_id" name="priority_id">
+                                                <option>Select Priority</option>
+                                                @foreach ($priority as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <div class="col" id="keterangan">
@@ -207,7 +213,8 @@
                     $('#keterangan').append(
                         '<input type="text" class="form-control" name="keterangan" id="note">'
                     );
-
+                } else {
+                    $('#keterangan').empty();
                 }
             });
         });

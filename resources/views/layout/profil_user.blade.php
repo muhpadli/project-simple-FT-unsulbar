@@ -21,12 +21,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Profil</h1>
+                    <h1>Profile</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Beranda</a></li>
-                        <li class="breadcrumb-item active">Profil</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Profile</li>
                     </ol>
                 </div>
             </div>
@@ -47,207 +47,270 @@
                             <div class="card-header ">
                                 Info User
                             </div>
-                            <div class="card-body" style="max-height: 450px;">
-                                <div class="col-3 float-left mr-3">
-                                    <div style="max-height: 400px;">
-                                        @if ($data->image)
-                                            <img style="max-height: 360px; " class="card-img-top img-thumbnail"
-                                                src="{{ asset('storage/' . $data->image) }}" alt="Card image">
-                                        @else
-                                            <img style="max-height: 360px;" class="card-img-top img-thumbnail"
-                                                src="https://source.unsplash.com/400x600/?user" alt="Card image">
-                                        @endif
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <div>
+                                            @if ($data->image)
+                                                <img class="card-img-top img-thumbnail"
+                                                    src="{{ asset('storage/' . $data->image) }}" alt="Card image">
+                                            @else
+                                                <img style="max-height: 360px;" class="card-img-top p-4 img-thumbnail"
+                                                    src="{{ asset('storage/post-images/user.png') }}" alt="Card image">
+                                            @endif
+                                        </div>
+                                        <div class="row mt-3 ml-3">
+                                            <input type="file" name="image">
+                                        </div>
                                     </div>
-                                    <div class="row mt-3 ml-3">
-                                        <input type="file" name="image">
+                                    <div class="col-md-9">
+                                        @if (session()->has('success'))
+                                            <div class="alert alert-success alert-dismissible small fade show col-12"
+                                                role="alert">
+                                                {{ session('success') }}
+                                            </div>
+                                        @endif
+                                        <table class="table-striped col-md-12 p-0">
+                                            <tr>
+                                                <td class="col-3">
+                                                    Nama Lengkap
+                                                </td>
+                                                <td>:</td>
+                                                <td class="col float-left">
+                                                    <input type="text" name="nama"
+                                                        class="form-control  @error('nama') is-invalid @enderror"
+                                                        value="{{ $data->name }}">
+                                                    @error('nama')
+                                                        <div class="alert alert-danger mt-2">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    NIP
+                                                </td>
+                                                <td>:</td>
+                                                @if ($data->NIP)
+                                                    <td class="col float-left"><input type="text"
+                                                            class="form-control @error('nip') is-invalid @enderror"
+                                                            value="{{ $data->NIP }}" name="nip">
+                                                        @error('nip')
+                                                            <div class="alert alert-danger">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @else
+                                                    <td class="col float-left"><input type="text" class="form-control"
+                                                            value="-" name="nip">
+                                                        @error('nip')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Kontak
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->kontak)
+                                                    <td class="col"> <input
+                                                            class="form-control @error('kontak') is-invalid @enderror"
+                                                            type="text" value="{{ $data->kontak }}" name="kontak"
+                                                            id="">
+                                                        @error('kontak')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @else
+                                                    <td class="col"> <input
+                                                            class="form-control  @error('kontak') is-invalid @enderror"
+                                                            type="text" name="kontak" id="">
+                                                        @error('kontak')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Email
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->email)
+                                                    <td class="col"> <input
+                                                            class="form-control @error('email') is-invalid @enderror"
+                                                            type="email" value="{{ $data->email }}" name="email"
+                                                            id="">
+                                                        @error('email')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @else
+                                                    <td class="col"> <input
+                                                            class="form-control @error('email') is-invalid @enderror"
+                                                            type="text" name="kontak" id="">
+                                                        @error('email')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Jenis Kelamin
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->jk)
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            value="{{ $data->jk }}" disabled></td>
+                                                @else
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            id=""></td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Organisasi
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->jabatan_id)
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            value="{{ $data->nama_organisasi }}" disabled></td>
+                                                @else
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            id="" disabled></td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Jabatan
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->jabatan_id)
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            value="{{ $data->nama_jabatan }}" disabled></td>
+                                                @else
+                                                    <td class="col"> <input class="form-control" type="text"
+                                                            id="" disabled></td>
+                                                @endif
+                                            </tr>
+                                            <tr>
+                                                <td class="col-3">
+                                                    Alamat
+                                                </td>
+                                                <td>
+                                                    :
+                                                </td>
+                                                @if ($data->alamat)
+                                                    <td class="col"> <input
+                                                            class="form-control @error('alamat') is-invalid @enderror"
+                                                            type="text" value="{{ $data->alamat }}" name="alamat"
+                                                            id="">
+                                                        @error('alamat')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @else
+                                                    <td class="col"> <input
+                                                            class="form-control @error('alamat') is-invalid @enderror"
+                                                            type="text" name="alamat" id="">
+                                                        @error('alamat')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                @endif
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    @if (session()->has('success'))
-                                        <div class="alert alert-success alert-dismissible small fade show col-12"
-                                            role="alert">
-                                            {{ session('success') }}
-                                        </div>
-                                    @endif
-                                    <table class="table-striped col-md-12 p-0">
-                                        <tr class="p-0">
-                                            <td class="col-3">
-                                                Nama Lengkap
-                                            </td>
-                                            <td>:</td>
-                                            <td class="col float-left">
-                                                <input type="text" name="nama"
-                                                    class="form-control  @error('nama') is-invalid @enderror"
-                                                    value="{{ $data->name }}">
-                                                @error('nama')
-                                                    <div class="alert alert-danger mt-2">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                NIP
-                                            </td>
-                                            <td>:</td>
-                                            @if ($data->NIP)
-                                                <td class="col float-left"><input type="text"
-                                                        class="form-control @error('nip') is-invalid @enderror"
-                                                        value="{{ $data->NIP }}" name="nip">
-                                                    @error('nip')
-                                                        <div class="alert alert-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @else
-                                                <td class="col float-left"><input type="text" class="form-control"
-                                                        value="-" name="nip">
-                                                    @error('nip')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Kontak
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->kontak)
-                                                <td class="col"> <input
-                                                        class="form-control @error('kontak') is-invalid @enderror"
-                                                        type="text" value="{{ $data->kontak }}" name="kontak"
-                                                        id="">
-                                                    @error('kontak')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @else
-                                                <td class="col"> <input
-                                                        class="form-control  @error('kontak') is-invalid @enderror"
-                                                        type="text" name="kontak" id="">
-                                                    @error('kontak')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Email
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->email)
-                                                <td class="col"> <input
-                                                        class="form-control @error('email') is-invalid @enderror"
-                                                        type="email" value="{{ $data->email }}" name="email"
-                                                        id="">
-                                                    @error('email')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @else
-                                                <td class="col"> <input
-                                                        class="form-control @error('email') is-invalid @enderror"
-                                                        type="text" name="kontak" id="">
-                                                    @error('email')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Jenis Kelamin
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->jk)
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        value="{{ $data->jk }}" disabled></td>
-                                            @else
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        id=""></td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Organisasi
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->jabatan_id)
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        value="{{ $data->nama_organisasi }}" disabled></td>
-                                            @else
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        id="" disabled></td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Jabatan
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->jabatan_id)
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        value="{{ $data->nama_jabatan }}" disabled></td>
-                                            @else
-                                                <td class="col"> <input class="form-control" type="text"
-                                                        id="" disabled></td>
-                                            @endif
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">
-                                                Alamat
-                                            </td>
-                                            <td>
-                                                :
-                                            </td>
-                                            @if ($data->alamat)
-                                                <td class="col"> <input
-                                                        class="form-control @error('alamat') is-invalid @enderror"
-                                                        type="text" value="{{ $data->alamat }}" name="alamat"
-                                                        id="">
-                                                    @error('alamat')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @else
-                                                <td class="col"> <input
-                                                        class="form-control @error('alamat') is-invalid @enderror"
-                                                        type="text" name="alamat" id="">
-                                                    @error('alamat')
-                                                        <div class="alert alert-danger mt-2">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </td>
-                                            @endif
-                                        </tr>
-                                    </table>
+                                    <div class="col-md-12">
+                                        <table class="table-striped p-0  ">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3">Riwayat Pendidikan</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="p-0">
+                                                    <td class="col-3">Strata-1</td>
+                                                    <td>:</td>
+                                                    <td class="col ">
+                                                        <input class="form-control @error('strata_1') is-invalid @enderror"
+                                                            type="text"
+                                                            @if ($story_study != null) value="{{ $data->strata_1 }}" @else value="" @endif
+                                                            name="strata_1" id="">
+                                                        @error('strata_1')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                </tr>
+                                                <tr class="p-0">
+                                                    <td class="col-3 ">Strata-2</td>
+                                                    <td>:</td>
+                                                    <td class="col">
+                                                        <input class="form-control @error('strata_2') is-invalid @enderror"
+                                                            type="text" 
+                                                            @if ($story_study != null) value="{{ $data->strata_2 }}" @else value="" @endif 
+                                                            name="strata_2"
+                                                            id="">
+                                                        @error('strata_2')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                </tr>
+                                                <tr class="p-0">
+                                                    <td class="col-md-3">Strata-3</td>
+                                                    <td>:</td>
+                                                    <td class="col">
+                                                        <input
+                                                            class="form-control @error('strata_3') is-invalid @enderror"
+                                                            type="text" 
+                                                            @if ($story_study != null) value="{{ $data->strata_3 }}" @else value="" @endif
+                                                            name="strata_3"
+                                                            id="">
+                                                        @error('strata_3')
+                                                            <div class="alert alert-danger mt-2">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-footer">

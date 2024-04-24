@@ -4,6 +4,18 @@
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <style>
+        .card-header ul {
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .card-header ul li {
+            list-style: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
 @endsection
 @section('sidebar')
     @include('layout.Sidebar')
@@ -13,16 +25,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col">
-                    <h1>Daftar Tugas
-                        <span class="badge"><a href="{{ route('DetailTask.create') }}" class="btn btn-info btn-sm">
-                                <i class="fas fa-plus-square"></i> Buat Tugas
-                            </a></span>
-                    </h1>
+                    <h1>Task Duties</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Beranda</a></li>
-                        <li class="breadcrumb-item active">Daftar Tugas</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Task Duties</li>
                     </ol>
                 </div>
             </div>
@@ -33,96 +41,59 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-12">
-                    <div class="card">
+                <div class="col-md-9">
+                    <div class="card card-outline card-info">
                         <!-- /.card-header -->
+                        <div class="card-header">
+                            <div class="left-header" style="float: left">
+                                <ul>
+                                    @foreach ($prioritas_tugas as $item)
+                                        <li>
+                                            <div class="text-{{ $item->bg_color }}"><i class="fas fa-square"></i>
+                                                <span style="color: black">{{ Str::ucfirst($item->name) }}</span>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <div class="right-header" style="float: right">
+                                <div class="badge"><a href="{{ route('DetailTask.create') }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-plus-square"></i> New Task
+                                    </a></div>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped" id="datatable">
+                                <table class="table table-striped table-hover" class="display" id="datatable">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px">No.</th>
-                                            <th>Judul tugas</th>
-                                            <th>Deskripsi</th>
-                                            <th>Organisasi</th>
-                                            <th class="text-center">status</th>
-                                            <th class="text-center">Prioritas</th>
-                                            <th class="text-center">Aksi</th>
+                                            <th class="d-flex justify-content-center">Priority</th>
+                                            <th>Title</th>
+                                            <th>Task For</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($task as $key => $item)
                                             <tr>
-                                                <td>{{ $loop->index + 1 }}</td>
-                                                <td>{{ $item->title_task }}</td>
-                                                <td><span>{{ $item->excerpt }}</span>
+                                                <td>
+                                                    <span class="text-{{ $item->bg_warna }} d-flex justify-content-center">
+                                                        <i class="fas fa-square"></i>
+                                                    </span>
                                                 </td>
-                                                <td><span>{{ $item->department }}</span></td>
+                                                <td>{{ $item->title_task }}</td>
+                                                </td>
+                                                <td><span>{{ $item->nameUser }}</span></td>
                                                 <td><span
-                                                        class="badge bg-{{ $item->bg_color }} align-item-center float-center p-2"
+                                                        class="badge bg-{{ $item->bg_color }} btn-sm align-item-center float-center p-1"
                                                         style="width: 75px">{{ $item->name_status }}</span>
                                                 </td>
-                                                <td class="d-flex">
-                                                    <span><span class="badge bg-{{ $item->bg_warna }} p-2"
-                                                            style="width: 75px">{{ $item->name }}</span>
-                                                </td>
                                                 <td>
-                                                    <div class="d-flex justify-content-center mt-2">
-                                                        <div class="dropdown">
-                                                            <button class="btn p-1 btn-xs" type="button"
-                                                                id="dropdownMenuButton" data-toggle="dropdown"
-                                                                aria-haspopup="true" aria-expanded="false">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-right"
-                                                                aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item"
-                                                                    href="{{ route('DetailTask.show', $item->id) }}">
-                                                                    <i class="fas fa-info-circle mr-2"></i> Detail
-                                                                </a>
-                                                                <a class="dropdown-item" href="#" data-toggle="modal"
-                                                                    data-target="#hapusModal{{ $item->id }}">
-                                                                    <i class="fas fa-trash-alt mr-2"></i> Hapus
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Modal untuk konfirmasi penghapusan -->
-                                                    <div class="modal fade" id="hapusModal{{ $item->id }}"
-                                                        tabindex="-1" role="dialog"
-                                                        aria-labelledby="hapusModalLabel{{ $item->id }}"
-                                                        aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title"
-                                                                        id="hapusModalLabel{{ $item->id }}">Konfirmasi
-                                                                        Penghapusan</h5>
-                                                                    <button type="button" class="close"
-                                                                        data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    Apakah Anda yakin ingin menghapus data ini?
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-dismiss="modal">Batal</button>
-                                                                    <!-- Tambahkan form untuk melakukan penghapusan dengan method DELETE -->
-                                                                    <form
-                                                                        action="{{ route('DetailTask.destroy', $item->id) }}"
-                                                                        method="POST">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit"
-                                                                            class="btn btn-danger">Hapus</button>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <a class="badge badge-info btn-sm"
+                                                        href="{{ route('DetailTask.show', $item->id) }}">
+                                                        <i class="fas fa-eye mr-2">View</i>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -131,6 +102,69 @@
                             </div>
                         </div>
                         <!-- /.card-body -->
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card card-outline card-info p-2">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa fa-filter"></i>FILTER</div>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                            data-accordion="false">
+                            <li class="nav-item {{ $active === 'filter-priority' ? 'menu-open' : ' ' }}">
+                                <a href="" class="nav nav-link {{ $active === 'filter-priority' ? 'active' : '' }}"
+                                    style="font-weight: bold;">
+                                    Priority <i class="right fas fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview"
+                                    style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                    @foreach ($prioritas_tugas as $key => $item)
+                                        <li>
+                                            <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-priority', $key + 1) }}" 
+                                            @else
+                                                href="{{ route('detail-where-priority', $key + 1) }}" @endif
+                                                class="nav-link small ">
+                                                <span style="display: flexbox; justify-content: center;">
+                                                    <p class="text-dark">{{ Str::ucfirst($item->name) }} @if ($priority === Str::lower($item->name))
+                                                            <i class=' fa fa-check-circle'></i>
+                                                        @endif
+                                                    </p>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                            <li class="nav-item  {{ $active === 'filter-status' ? 'menu-open' : ' ' }}">
+                                <a href="" class="nav-link {{ $active === 'filter-status' ? 'active' : '' }}"
+                                    style="font-weight: bold;">
+                                    status
+                                    <i class="right fas fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview"
+                                    style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                    @foreach ($prioritas_status as $key => $item)
+                                        <li>
+                                            <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-status', $key + 1) }}"
+                                                @else
+                                                    href="{{ route('detail-where-staus', $key + 1) }}" @endif
+                                                class="nav-link small">
+                                                <span style="display: flexbox; justify-content: center;">
+                                                    <p class="text-dark">{{ Str::ucfirst($item->name_status) }}
+                                                        @if ($priority === $item->name_status)
+                                                            <i class='fa fa-check-circle'></i>
+                                                        @endif
+                                                    </p>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -74,6 +74,10 @@ Route::resource('/user_staf',stafController::class)->middleware('auth');
 Route::put('/pending_tugas/{id}', [stafController::class, 'pending_task'])->name('pending_tugas');
 // route button star working
 Route::put('/start_working/{id}', [stafController::class, 'start_working_task'])->name('start_working_task');
+// route button accepted
+Route::put('/accepted/{id}', [stafController::class, 'accepted_task'])->name('accepted_task');
+// route button revisi
+Route::post('/revision', [stafController::class, 'revision_task'])->name('revision_task');
 
 
 Route::get('/jabatan/{id}', [UserController::class, 'getJabatan']);
@@ -84,4 +88,5 @@ Route::resource('/user_staf/riwayat_tugas', riwayatTugasController::class)->midd
 
 Route::resource('profil', profilUserControlller::class);
 
+Route::get('/dashboard-chart',[TaskController::class, 'getTaskByPriority'])->name('getDataTaskbyStatus');
 

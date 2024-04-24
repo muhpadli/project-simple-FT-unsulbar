@@ -6,6 +6,7 @@ use App\Models\jabatan;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Profil;
+use App\Models\Riwayat_pendidikan;
 use App\Models\riwayat_tugas;
 use App\Models\Role;
 use App\Models\Status;
@@ -45,7 +46,7 @@ class PejabatController extends Controller
                     ->join('users', 'users.id', '=', 'tasks.user_id')
                     ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
                     ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-                    ->select('tasks.id', 'tasks.status_id','statuses.bg_color','priorities.bg_color AS bg_warna','tasks.title_task', 'tasks.excerpt', 'statuses.name_status','priorities.name', 'organizations.name AS department')
+                    ->select('tasks.id', 'tasks.status_id', 'users.name AS nameUser','statuses.bg_color','priorities.bg_color AS bg_warna','tasks.title_task', 'tasks.excerpt', 'statuses.name_status','priorities.name', 'organizations.name AS department')
                     ->where([
                         ['id_creator', '=', auth()->user()->id],
                         ['priority_id', '=', $id]
@@ -76,7 +77,7 @@ class PejabatController extends Controller
                     ->join('users', 'users.id', '=', 'tasks.user_id')
                     ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
                     ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-                    ->select('tasks.id', 'tasks.title_task', 'tasks.excerpt', 'statuses.bg_color','priorities.bg_color AS bg_warna', 'statuses.name_status','priorities.name', 'organizations.name AS department')
+                    ->select('tasks.id', 'tasks.title_task', 'users.name AS nameUser', 'tasks.excerpt', 'statuses.bg_color','priorities.bg_color AS bg_warna', 'statuses.name_status','priorities.name', 'organizations.name AS department')
                     ->where([
                         ['id_creator', '=', auth()->user()->id],
                         ['status_id', '=', $id]
@@ -108,7 +109,10 @@ class PejabatController extends Controller
                     ->join('users', 'users.id', '=', 'tasks.user_id')
                     ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
                     ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-                    ->select('tasks.id','tasks.status_id', 'tasks.title_task', 'tasks.excerpt', 'statuses.name_status', 'statuses.bg_color','priorities.name','priorities.bg_color AS bg_warna', 'organizations.name AS department')
+                    ->select('tasks.id','tasks.status_id', 'users.name AS nameUser', 'tasks.title_task', 'tasks.excerpt', 'statuses.name_status', 'statuses.bg_color','priorities.name','priorities.bg_color AS bg_warna', 'organizations.name AS department')
+                    ->where([
+                        ['id_creator', '=', auth()->user()->id]
+                    ])
                     ->orderBy('tasks.updated_at', 'desc')
                     ->get();
 
@@ -175,6 +179,33 @@ class PejabatController extends Controller
                 'kontak'=> $data['kontak'],
                 'alamat'=> $data['alamat']
             ]);
+
+            //update data riwayat pendidikan
+            if ($request->strata_1) {
+                $strata_1 = $request->strata_1;
+                $riwayat_study_id = Riwayat_pendidikan::where('user_id', '=', $id)->get()->first();
+                $riwayat_study_user = Riwayat_pendidikan::findOrFail($riwayat_study_id->id);
+                if ($request->strata_2){
+                    $strata_2 = $request->strata_2;
+                    if ($request->strata_3){
+                        $strata_3 = $request->strata_3;
+                        $riwayat_study_user->update([
+                            'strata_1' => $strata_1,
+                            'strata_2' => $strata_2,
+                            'strata_3' => $strata_3
+                        ]);
+                    } else{
+                        $riwayat_study_user->update([
+                            'strata_1' => $strata_1,
+                            'strata_2' => $strata_2
+                        ]);
+                    }
+                } else{
+                    $riwayat_study_user->update([
+                        'strata_1' => $strata_1
+                    ]);
+                } 
+            }
         }else{
             $user->update([
                 'name'      => $data['nama'],
@@ -190,6 +221,33 @@ class PejabatController extends Controller
                 'kontak'=> $data['kontak'],
                 'alamat'=> $data['alamat']
             ]);
+
+            //update data riwayat pendidikan
+            if ($request->strata_1) {
+                $strata_1 = $request->strata_1;
+                $riwayat_study_id = Riwayat_pendidikan::where('user_id', '=', $id)->get()->first();
+                $riwayat_study_user = Riwayat_pendidikan::findOrFail($riwayat_study_id->id);
+                if ($request->strata_2){
+                    $strata_2 = $request->strata_2;
+                    if ($request->strata_3){
+                        $strata_3 = $request->strata_3;
+                        $riwayat_study_user->update([
+                            'strata_1' => $strata_1,
+                            'strata_2' => $strata_2,
+                            'strata_3' => $strata_3
+                        ]);
+                    } else{
+                        $riwayat_study_user->update([
+                            'strata_1' => $strata_1,
+                            'strata_2' => $strata_2
+                        ]);
+                    }
+                } else{
+                    $riwayat_study_user->update([
+                        'strata_1' => $strata_1
+                    ]);
+                } 
+            }
         }
 
         return redirect()->route('ManageUsers.show', $id)->with(['success' => 'Data Profil Berhasil Diubah!']);

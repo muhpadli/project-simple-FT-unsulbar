@@ -32,15 +32,15 @@
         <div class="container-fluid">
             <div class="row">
                 @foreach ($users as $us)
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <div class="card">
-                            <div style="height: 220px; overflow:hidden;">
+                            <div style="height: 260px; overflow:hidden;">
                                 @if ($us->image)
-                                    <img class="card-img-top" style="height: 220px"
+                                    <img class="card-img-top" style="height: 260px"
                                         src="{{ asset('storage/' . $us->image) }}" alt="Card image">
                                 @else
-                                    <img class="card-img-top" style="height: 220px"
-                                        src="https://source.unsplash.com/400x600/?user" alt="Card image">
+                                    <img class="card-img-top p-4" style="height: 260px"
+                                        src="{{ asset('storage/post-images/user.png') }}" alt="Card image">
                                 @endif
                             </div>
                             <div class="card-body">

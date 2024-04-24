@@ -7,6 +7,7 @@ use App\Models\jabatan;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Profil;
+use App\Models\Riwayat_pendidikan;
 use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
@@ -55,11 +56,17 @@ class UserController extends Controller
         $organisasi = Organization::all();
         $detail = DB::table('users')
         ->join('profils', 'profils.id', '=', 'users.profil_id')
+        ->join('riwayat_pendidikans', 'users.id', '=', 'riwayat_pendidikans.user_id')
         ->join('genders', 'genders.id', '=', 'users.genders_id')
         ->select('users.name', 'users.email', 'profils.NIP', 'profils.kontak', 'genders.namaGender',  'users.genders_id', 
-        'profils.alamat', 'users.jabatan_id', 'users.roles_id', 'users.username', 'users.password')
+        'profils.alamat', 'users.jabatan_id', 'users.roles_id', 'users.username', 'users.password','riwayat_pendidikans.strata_1', 'riwayat_pendidikans.strata_2', 'riwayat_pendidikans.strata_3' )
         ->where('users.id', '=', $id)
         ->get()->first();
+
+        //riwayat_pendidikan
+        $study_in_history = Riwayat_pendidikan::where('user_id', '=', auth()->user()->id)
+            ->get()
+            ->first();
 
         $prioritas_tugas = Priority::all();
         $prioritas_status = Status::all();
@@ -74,6 +81,7 @@ class UserController extends Controller
                     
 
         return view('layout.Admin.UserDetail',[
+            'story_study'   => $study_in_history,
             'user'          => $user,
             'profil'        => $profil,
             'data'          => $detail,
@@ -96,11 +104,12 @@ class UserController extends Controller
         $organisasi = Organization::all();
         $detail = DB::table('users')
         ->join('profils', 'profils.id', '=', 'users.profil_id')
+        ->join('riwayat_pendidikans', 'users.id', '=', 'riwayat_pendidikans.user_id')
         ->join('genders', 'genders.id', '=', 'users.genders_id')
         ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
         ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
         ->select('users.name', 'users.email', 'profils.NIP', 'profils.kontak', 'genders.namaGender',  'users.genders_id', 
-        'profils.alamat', 'organizations.name AS name_organisasi', 'jabatans.name AS nama_jabatan','users.jabatan_id', 'users.roles_id', 'users.username', 'users.password')
+        'profils.alamat', 'organizations.name AS name_organisasi', 'jabatans.name AS nama_jabatan','users.jabatan_id', 'users.roles_id', 'users.username', 'users.password', 'riwayat_pendidikans.strata_1',  'riwayat_pendidikans.strata_2',  'riwayat_pendidikans.strata_3')
         ->where('users.id', '=', $id)
         ->get()->first();
 
@@ -191,6 +200,14 @@ class UserController extends Controller
             'roles_id'  => $validated['role'],
             'profil_id' => $latestId,
         ]);
+
+        $lastIDUser = User::latest()->first();
+        $latestIdUser = $lastIDUser->id;
+
+        Riwayat_pendidikan::create([
+            'user_id' => $latestIdUser
+        ]);
+        
         Alert::success('Good Job', 'User baru berhasil ditambahkan!');
         return redirect()->route('dashboard');
 

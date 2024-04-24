@@ -13,10 +13,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1>Daftar Organisasi<span class="badge"><a href="{{ route('manageOrganization.store') }}"
-                                class="btn btn-info btn-sm">
-                                <i class="fas fa-plus-square"></i> Tambah Organisasi
-                            </a></span></h1>
+                    <h1>Daftar Organisasi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -33,8 +30,13 @@
                 <div class="col-12">
                     <div class="card card-outline card-info">
                         <div class="card-header">
-                            <div class="card-title">
+                            <div class="card-title" style="float: left">
                                 Daftar Organisasi
+                            </div>
+                            <div class="badge m-0" style="float: right">
+                                <a href="{{ route('manageOrganization.store') }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-plus-square"></i> Tambah Organisasi
+                                </a>
                             </div>
                         </div>
 

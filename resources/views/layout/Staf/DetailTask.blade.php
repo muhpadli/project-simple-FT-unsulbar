@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Detail Tugas | FT Unsulbar
+    Detail Task | FT Unsulbar
 @endsection
 @section('head')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
@@ -15,13 +15,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Detail Tugas</h1>
+                    <h1>Detail Task</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('details-tugas-staf') }}">Daftar Tugas</a></li>
-                        <li class="breadcrumb-item active">Detail Tugas</li>
+                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('details-tugas-staf') }}">My Tasks</a></li>
+                        <li class="breadcrumb-item active">Detail Task</li>
                     </ol>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     <div class="card card-outline card-info">
                         <div class="card-header">
                             <div class="col-12">
-                                <h5>{{ $task->title_task }}</h5>
+                                <h5 style="font-weight: 700">{{ $task->title_task }}</h5>
                                 <p class="small" style="margin: 0; line-height: 5px;">created by :
                                     {{ $task->name_user }} /
                                     {{ $task->name_jabatan }}
@@ -47,7 +47,8 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-3 ml-3">
-                            <h5 style="margin: 0; border-bottom: 1px solid rgba(0,0,0,0.2)" class="pb-2">Deskripsi</h5>
+                            <h5 style="margin: 0; border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700"
+                                class="pb-2">Description</h5>
                             <p style="text-align: justify">{!! $task->deksripsi !!}</p>
                             @if ($task->keterangan)
                                 <p class="small">Note : {{ $task->keterangan }}</p>
@@ -65,7 +66,7 @@
                                         <form action="{{ route('start_working_task', $task->id) }}" method="post">
                                             @csrf
                                             @method('PUT')
-                                            <button type="submit" class="btn btn-primary">Start Working</button>
+                                            <button type="submit" class="btn btn-primary">Register</button>
                                         </form>
                                     </div>
                                 @elseif ($task->name_status == 'on progres' || $task->name_status == 'revisi')
@@ -73,7 +74,7 @@
                                         @csrf
                                         <input type="hidden" name="tugas_id" value="{{ $task->id }}">
                                         <div class="form-group">
-                                            <label for="taskDescription" class="form-label">Link Google Drive</label>
+                                            <label for="taskDescription" class="form-label">Link Drive Task</label>
                                             <input class="form-control @error('link_tugas') is-invalid @enderror "
                                                 id="link_tugas" name="link_tugas" placeholder="Link Google Drive" required>
                                             @error('link_tugas')
@@ -83,7 +84,7 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">Isi Keterangan</label>
+                                            <label class="form-label">Description Link Task</label>
                                             <textarea class="form-control @error('content') is-invalid @enderror" id="editor" name="keterangan" rows="5"
                                                 placeholder="Tambahkan keterangan (opsional)"></textarea>
 
@@ -97,61 +98,79 @@
                                         <button type="submit" class="btn btn-info mt-3">Submit Tugas</button>
                                     </form>
                                 @elseif ($task->name_status == 'pending')
-                                    <a href="" class="btn btn-primary">Start Working</a>
-                                @elseif ($task->name_status == 'finish')
-                                    <div class="alert alert-info">
-                                        Tugas belum divalidasi pimpinan!
-                                    </div>
+                                    <form action="{{ route('start_working_task', $task->id) }}" method="post">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-primary">Register</button>
+                                    </form>
                                 @endif
                             </div>
-                            <h5 class="mt-3" style="border-bottom: 1px solid rgba(0,0,0,0.2)">Detail Submitted</h5>
+                            <h5 class="mt-3" style="border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700">Submission
+                                Status</h5>
                             <div class="col-md-12">
-                                <table class=" table table-striped table-bordered ml-0 ">
+                                {{-- alert by status --}}
+                                @if ($task->name_status == 'finish')
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        <div><i class="fas fa-exclamation-circle mr-2"></i></div>
+                                        <div>Submission Not Validated</div>
+                                    </div>
+                                @elseif ($task->name_status == 'accepted')
+                                    <div class="alert alert-success d-flex align-items-center">
+                                        <div><i class="fas fa-check-circle mr-2"></i></div>
+                                        <div>Submission Was Approved</div>
+                                    </div>
+                                @elseif ($task->name_status == 'revisi')
+                                    <div class="alert alert-warning d-flex align-items-center">
+                                        <div><i class="fas fa-exclamation-circle mr-2"></i></div>
+                                        <div>submission needs to be revised</div>
+                                    </div>
+                                @endif
+                                <table class=" table table-striped table-bordered table-hover ml-0 ">
                                     <tbody>
                                         <tr>
-                                            <td class="col-3">Link Tugas</td>
+                                            <th class="col-3">Submission Status</th>
                                             <td class="col-9">
-                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres' || $task->name_status == 'pending')
-                                                    {{ 'belum ada' }}
-                                                @else
-                                                    {{ $tugas_terkirim->link_tugas }}
-                                                @endif
+                                                {{ Str::ucfirst($task->name_status) }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Status</td>
+                                            <th class="col-3">Submission Priority</th>
                                             <td class="col-9">
-                                                {{ $task->name_status }}
+                                                {{ Str::ucfirst($task->name) }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Priority</td>
-                                            <td class="col-9">
-                                                {{ $task->name }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="col-3">Date Started</td>
+                                            <th class="col-3">Date Started</th>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'register' || $task->name_status == 'pending')
-                                                    {{ 'belum dimulai' }}
+                                                    {{ 'Not Started' }}
                                                 @else
                                                     {{ $task->date_start }}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Due Date</td>
+                                            <th class="col-3">Due Date</th>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
                                                     {{ $tugas_terkirim->waktu_selesai }}
                                                 @else
-                                                    {{ 'belum selesai' }}
+                                                    {{ 'Not Completed' }}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="col-3">Keterangan</td>
+                                            <th class="col-3">Link Task</th>
+                                            <td class="col-9">
+                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres' || $task->name_status == 'pending')
+                                                    {{ 'Not Link Task' }}
+                                                @else
+                                                    {{ $tugas_terkirim->link_tugas }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-3">Description Link Task</th>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
                                                     {!! $tugas_terkirim->keterangan !!}
@@ -160,6 +179,12 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        @if ($task->name_status == 'revisi')
+                                            <tr>
+                                                <th class="col-3">Revision</th>
+                                                <td class="col-9">{!! $tugas_terkirim->revision !!}</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>

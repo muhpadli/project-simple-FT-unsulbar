@@ -86,11 +86,11 @@ class stafController extends Controller
                 'creators.name AS name_user', // Menambahkan field untuk name_user
                 'jabatans.name AS name_jabatan' // Menambahkan field untuk name_jabatan
             )
-            ->orderBy('tasks.updated_at', 'desc')
             ->where([
                 ['user_id', '=', auth()->user()->id],
                 ['status_id', '=', $id]
             ])
+            ->orderBy('tasks.updated_at', 'desc')
             ->get();
             $priority = Status::where('id','=',$id)->first();
 
@@ -125,6 +125,7 @@ class stafController extends Controller
                 'jabatans.name AS name_jabatan' // Menambahkan field untuk name_jabatan
             )
             ->where('user_id', auth()->user()->id)
+            ->orderBy('tasks.updated_at', 'desc')
             ->get();
             
         return view('layout.Staf.index', [
@@ -245,5 +246,35 @@ class stafController extends Controller
     
         return redirect()->route('user_staf.show', $id);
 
+    }
+
+    public function accepted_task($id){
+        $status_id = 6;
+        $task = Task::findOrFail($id);
+        $task->update([
+            'status_id' => $status_id
+        ]);
+    
+        return redirect()->route('DetailTask.show', $id)->with(['success' => 'Task Was Approved']);
+
+    }
+
+    public function revision_task(Request $request){
+        $data = $request->validate([
+            'riwayat_tugas_id' => 'required',
+            'tugas_id'  => 'required',
+            'revision'  =>  'required|min:5'
+        ]);
+
+        $status_id = 4;
+        $task = Task::findOrFail($data['tugas_id']);
+        $riwayat_tugas = riwayat_tugas::findOrFail($data['riwayat_tugas_id']);
+        $task->update([
+            'status_id' => $status_id
+        ]);
+        $riwayat_tugas->update([
+            'revision'  => $data['revision']
+        ]);
+        return redirect()->route('DetailTask.show', $data['tugas_id'])->with(['success' => 'submission needs to be revised']);
     }
 }

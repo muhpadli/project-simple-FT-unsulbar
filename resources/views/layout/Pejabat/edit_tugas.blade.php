@@ -1,6 +1,9 @@
 @extends('Master')
 @section('title')
-    Edit Tugas| FT Unsulbar
+    Edit Task| FT Unsulbar
+@endsection
+@section('head')
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 @endsection
 @section('sidebar')
     @include('layout.Sidebar')
@@ -11,15 +14,15 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Tugas</h1>
+                    <h1>Edit Task</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Beranda</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Daftar Tugas</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('DetailTask.show', $task->id) }}">Detail Tugas</a>
+                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Task duties</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('DetailTask.show', $task->id) }}">Detail Task</a>
                         </li>
-                        <li class="breadcrumb-item active">Edit Tugas</li>
+                        <li class="breadcrumb-item active">Edit Task</li>
                     </ol>
                 </div>
             </div>
@@ -41,10 +44,10 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <div class="col"> <!-- Tambahkan kelas mb-0 di sini -->
-                                            <label class="col-form-label">Pilih
-                                                Organisasi</label>
+                                            <label class="col-form-label">Select
+                                                Organization</label>
                                             <select class="form-control" id="department" name="department">
-                                                <option>Pilih Organisasi</option>
+                                                <option>Select Organization</option>
                                                 @foreach ($department as $item)
                                                     <option value="{{ $item->id }}"
                                                         {{ $item->id == $task->id_departement ? 'selected' : '' }}>
@@ -53,24 +56,24 @@
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <label class="col-form-label">Pilih Jabatan</label>
+                                            <label class="col-form-label">Select Position</label>
                                             <select class="form-control" id="sub_department" name="sub_department">
-                                                <option>Pilih Jabatan</option>
+                                                <option>Select Position</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <div class="col">
-                                                <label class="col-form-label">Pilih User</label>
+                                                <label class="col-form-label">Select User</label>
                                                 <select class="form-control" id="user_id" name="user_id">
-                                                    <option>pilih User</option>
+                                                    <option>Select User</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col">
-                                                <label class="col-form-label">Prioritas</label>
+                                                <label class="col-form-label">Priority</label>
                                                 <select class="form-control" id="priority_id" name="priority_id">
-                                                    <option>Pilih Prioritas</option>
+                                                    <option>Select Priority</option>
                                                     @foreach ($priority as $item)
                                                         <option value="{{ $item->id }}"
                                                             {{ $item->id == $task->id_prioritas ? 'selected' : '' }}>
@@ -88,7 +91,7 @@
                                 <div class="col">
                                     <div class="form-group">
                                         <div class="col">
-                                            <label for="title" class="col-form-label">Judul Tugas</label>
+                                            <label for="title" class="col-form-label">Title Task</label>
                                             <input type="text"
                                                 class="form-control @error('title_task') is-invalid @enderror"
                                                 name="title_task" id="title_task"
@@ -101,8 +104,8 @@
                                             @enderror
                                         </div>
                                         <div class="col">
-                                            <label for="deksripsi" class="col-form-label">Deskripsi</label>
-                                            <textarea class="form-control  @error('deskripsi') is-invalid @enderror" name="deksripsi" id="deksripsi" rows="6">{{ $task->deksripsi }}</textarea>
+                                            <label for="deksripsi" class="col-form-label">Description</label>
+                                            <textarea class="form-control  @error('deskripsi') is-invalid @enderror" name="deksripsi" id="editor" rows="6">{!! $task->deksripsi !!}</textarea>
                                             @error('deksripsi')
                                                 <div class="alert alert-danger mt-2">
                                                     {{ $message }}
@@ -237,5 +240,12 @@
             // Call the function to set default values on document ready
             setDefaultValues();
         });
+    </script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
     </script>
 @endsection
