@@ -2,16 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\jabatan;
+use App\Models\Level_user;
 use App\Models\Organization;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class OrganizationController extends Controller
 {
-    public function index(){
-        return view('layout.Admin.ManageOrganisasi',[
+    public function index()
+    {
+        $organisasi = Organization::with('jabatans')->get();
+        $jabatan = DB::table('jabatans')->join('users', 'users.jabatan_id', '=', 'jabatans.id')->select('users.name', 'jabatans.id', 'jabatans.organisasi_id')->get();
+        return view('Admin.organisasi.index', [
+            'data' => $organisasi,
+            'jabatan' => $jabatan,
+            'active' => 'manageOrganisasi',
+        ]);
+    }
+
+    public function create(){
+        return view('Admin.organisasi.create',[
             'active' => 'manageOrganisasi'
         ]);
     }
@@ -28,13 +44,14 @@ class OrganizationController extends Controller
         ]);
 
         Alert::success('Good Job', 'Organisasi berhasil dibuat!');
-        return redirect()->route('organisasi')->with(['success' => 'Data Organisasi Berhasil Disimpan!']);
+        return redirect()->route('organisasi.index')->with(['success' => 'Data Organisasi Berhasil Disimpan!']);
     }
+
 
     public function edit(string  $id){
         $Organisasi = Organization::findOrFail($id);
 
-        return view('layout.Admin.editOrganisasi', [
+        return view('Admin.organisasi.edit', [
             'organisasi' => $Organisasi,
             'active' => 'manageOrganisasi'
         ]);
@@ -54,8 +71,7 @@ class OrganizationController extends Controller
         ]);
 
         Alert::success('Good Job', 'Organisasi berhasil di update!');
-
-        return redirect()->route('organisasi')->with(['success' => 'Data Berhasil Diubah!']);
+        return redirect()->route('organisasi.index')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
     public function destroy($id){
@@ -63,6 +79,6 @@ class OrganizationController extends Controller
 
         $organisasi->delete();
         Alert::success('Hore!','Organisasi berhasil terhapus!');
-        return redirect()->route('organisasi')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('organisasi.index')->with(['success' => 'Data Berhasil Dihapus!']);
     }
 }

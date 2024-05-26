@@ -5,9 +5,6 @@
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 @endsection
-@section('sidebar')
-    @include('layout.Admin.SidebarAdmin')
-@endsection
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
@@ -29,19 +26,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card card-outline card-info">
-                        <div class="card-header">
-                            <div class="card-title" style="float: left">
-                                Daftar Organisasi
-                            </div>
-                            <div class="badge m-0" style="float: right">
-                                <a href="{{ route('manageOrganization.store') }}" class="btn btn-info btn-sm">
-                                    <i class="fas fa-plus-square"></i> Tambah Organisasi
-                                </a>
-                            </div>
+                        <div class="card-header d-flex">
+                            <a href="{{ route('organisasi.create') }}" class="btn btn-info btn-sm mr-1">
+                                <i class="fas fa-plus-square"></i>
+                            </a>
                         </div>
-
                         <div class="card-body">
-                            <table class="table table-striped " id="datatable">
+                            <table class="table table-striped table-hover" id="datatable">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 15px">No.</th>
@@ -59,23 +50,23 @@
                                                 {{ $item->jabatans->where('organisasi_id', '=', $item->id)->count() }}
                                             </td>
                                             <td class="d-flex justify-content-center align-items-center">
-                                                <div class="badge bg-primary mr-2 p-1">
-                                                    <a href="{{ route('viewJabatan', $item->id) }}">
-                                                        <i class="fas fa-eye mr-1"></i>view
+                                                <div class="btn btn-sm bg-primary mr-2">
+                                                    <a href="{{ url('users/organisasi/jabatan', $item->id) }}">
+                                                        <i class="fas fa-eye"></i>
                                                     </a>
                                                 </div>
-                                                <div class="badge bg-info mr-2 p-1">
-                                                    <a href="{{ route('manageOrganization.edit', $item->id) }}">
-                                                        <i class="fas fa-edit mr-1"></i>edit
+                                                <div class="btn btn-sm bg-info mr-2">
+                                                    <a href="{{ route('organisasi.edit', $item->id) }}">
+                                                        <i class="fas fa-edit"></i>
                                                     </a>
                                                 </div>
-                                                <form onsubmit="return confirm('Apakah Anda Yakin ?');"
-                                                    action="{{ route('manageOrganization.destroy', $item->id) }}"
-                                                    method="post">
+                                                <form
+                                                    onsubmit="return confirm('Semua data jabatan dan user yang terkait dengan organisasi ini akan ikut terhapus. Apakah Anda Yakin ?');"
+                                                    action="{{ route('organisasi.destroy', $item->id) }}" method="post">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="badge bg-danger d-flex mr-2 p-1"
-                                                        style="border: none"><i class="fas fa-trash-alt mr-2"></i> Remove
+                                                    <button type="submit" class="btn btn-sm bg-danger mr-2"
+                                                        style="border: none"><i class="fas fa-trash-alt"></i>
                                                     </button>
                                                 </form>
 

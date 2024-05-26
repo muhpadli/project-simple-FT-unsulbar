@@ -6,10 +6,17 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -19,8 +26,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('details-tugas-staf') }}">My Tasks</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/users') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/users/my-task') }}">My Tasks</a></li>
                         <li class="breadcrumb-item active">Detail Task</li>
                     </ol>
                 </div>
@@ -70,15 +77,24 @@
                                         </form>
                                     </div>
                                 @elseif ($task->name_status == 'on progres' || $task->name_status == 'revisi')
-                                    <form action="{{ route('riwayat_tugas.store') }}" method="post">
+                                    <form
+                                        @if ($task->name_status == 'on progres') action="{{ route('riwayat_tugas.store') }}" @else
+                                        action="{{ route('riwayat_tugas.update', $task->id) }}" @endif
+                                        method="post">
                                         @csrf
-                                        <input type="hidden" name="tugas_id" value="{{ $task->id }}">
+                                        @if ($task->name_status == 'revisi')
+                                            @method('PUT')
+                                        @else
+                                            <input type="hidden" name="tugas_id" value="{{ $task->id }}">
+                                        @endif
                                         <div class="form-group">
                                             <label for="taskDescription" class="form-label">Link Drive Task</label>
                                             <input class="form-control @error('link_tugas') is-invalid @enderror "
-                                                id="link_tugas" name="link_tugas" placeholder="Link Google Drive" required>
+                                                id="link_tugas" name="link_tugas" placeholder="Link Google Drive"
+                                                @if ($task->id_status == 4) value="{{ $tugas_terkirim->link_tugas }}" @endif
+                                                required>
                                             @error('link_tugas')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -90,12 +106,19 @@
 
                                             <!-- error message untuk content -->
                                             @error('content')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
-                                        <button type="submit" class="btn btn-info mt-3">Submit Tugas</button>
+                                        {{-- button submit atau revisis tugas --}}
+                                        <button type="submit" class="btn btn-info mt-3">
+                                            @if ($task->name_status == 'revisi')
+                                                Submit Task Revision
+                                            @else
+                                                Submit Tugas
+                                            @endif
+                                        </button>
                                     </form>
                                 @elseif ($task->name_status == 'pending')
                                     <form action="{{ route('start_working_task', $task->id) }}" method="post">
@@ -172,10 +195,10 @@
                                         <tr>
                                             <th class="col-3">Description Link Task</th>
                                             <td class="col-9">
-                                                @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
-                                                    {!! $tugas_terkirim->keterangan !!}
+                                                @if ($task->name_status === 'register' || $task->name_status === 'on progres' || $task->name_status == 'pending')
+                                                    {{ 'Not Link Task' }}
                                                 @else
-                                                    {{ '-' }}
+                                                    {!! $tugas_terkirim->keterangan !!}
                                                 @endif
                                             </td>
                                         </tr>

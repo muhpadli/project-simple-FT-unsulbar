@@ -46,6 +46,7 @@
 <body class="hold-transition sidebar-mini  layout-fixed">
     @include('sweetalert::alert')
 
+
     <!-- Site wrapper -->
     <div class="wrapper">
         <!-- Navbar -->
@@ -71,7 +72,7 @@
 
                     </a>
                     <div class="dropdown-menu  dropdown-menu-right">
-                        <a href="{{ route('profil.index') }}" class="dropdown-item btn">
+                        <a href="{{ route('profil.index') }}" class="dropdown-item m-0">
                             <i class="fas fa-user-circle mr-2"></i> Profil
                         </a>
                         <div class="dropdown-divider"></div>
@@ -87,8 +88,14 @@
         </nav>
         <!-- /.navbar -->
 
-        <!-- Main Sidebar Container -->
-        @yield('sidebar')
+        @if (auth()->user()->roles_id == 2)
+            <!-- Main Sidebar Container -->
+            @include('layout.Sidebar')
+        @else
+            @include('Admin.layout.SidebarAdmin')
+        @endif
+
+
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">

@@ -1,12 +1,6 @@
 @extends('Master')
 @section('title')
-    Manage User | FT Unsulbar
-@endsection
-@section('sidebar')
-    @include('layout.Admin.SidebarAdmin')
-@endsection
-@section('organisasiStatus')
-    active
+    Tambah User | FT Unsulbar
 @endsection
 @section('content')
     <section class="content-header">
@@ -17,7 +11,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('ManageUsers.index') }}">Daftar User</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('pegawai.index') }}">Daftar User</a></li>
                         <li class="breadcrumb-item active">Tambah User</li>
                     </ol>
                 </div>
@@ -28,13 +22,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card card-outline card-info">
-                        <div class="card-header ">
-                            <h3 class="card-title">
-                                Informasi User
-                            </h3>
-                        </div>
-                        <form action="{{ route('ManageUsers.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('pegawai.store') }}" method="post" enctype="multipart/form-data">
+
+                        <div class="card card-outline card-info">
+                            <div class="card-header ">
+                                <h3 class="card-title">
+                                    Informasi User
+                                </h3>
+                            </div>
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -47,7 +42,7 @@
                                                 placeholder="Enter your name" name="nama_lengkap" id="namaLengkap"
                                                 value="{{ old('nama_lengkap') }}" autofocus required>
                                             @error('nama_lengkap')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -61,7 +56,7 @@
                                                 placeholder="Enter your NIP (Opsional)" name="nip" id="NIP"
                                                 value="{{ old('nip') }}">
                                             @error('nip')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -75,7 +70,7 @@
                                                 placeholder="Example : +6287908456123" id="kontak" name="kontak"
                                                 value="{{ old('kontak') }}" required>
                                             @error('kontak')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -104,7 +99,7 @@
                                                 placeholder="Enter your email" id="exampleEmail"
                                                 value="{{ old('email') }}">
                                             @error('email')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -118,15 +113,39 @@
                                                 placeholder="Enter your alamat" name="alamat" id="exampleAlamat"
                                                 value="{{ old('alamat') }}">
                                             @error('alamat')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="gender">Organisasi</label>
+                                            <select class="form-control" name="organisasi" id="organisasi">
+                                                @forelse ($organization as $data)
+                                                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                                                @empty
+                                                @endforelse
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">Jabatan</label>
+                                            <select class="form-control" id="jabatan" name="jabatan">
+                                                <option>Select Position</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-header card-outline card-info">
+                        </div>
+                        <div class="card card-outline card-info">
+
+                            <div class="card-header">
                                 <h3 class="card-title ">
                                     Keamanan User
                                 </h3>
@@ -141,7 +160,7 @@
                                             </label>
                                             <select class="form-control" name="role" id="role"
                                                 value="{{ old('role') }}">
-                                                <option selected>---Pilih Role User---</option>
+                                                <option selected>Role User</option>
                                                 @forelse ($roles as $role)
                                                     <option value="{{ $role->id }}">{{ $role->name_role }}</option>
                                                 @empty
@@ -156,7 +175,7 @@
                                             <input type="text" class="form-control" placeholder="Enter your Username"
                                                 value="{{ old('username') }}" id="Username" name="username">
                                             @error('username')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -169,7 +188,7 @@
                                             <input type="password" class="form-control" placeholder="Enter your password"
                                                 id="password" name="password">
                                             @error('password')
-                                                <div class="alert alert-danger mt-2">
+                                                <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
@@ -178,10 +197,10 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-info">Create</button>
+                                <button type="submit" class="btn btn-info">Tambah</button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -200,7 +219,7 @@
                 // console.log(organisasiID);
                 if (organisasiID) {
                     $.ajax({
-                        url: '/jabatan/' + organisasiID,
+                        url: '/users/pegawai/jabatan_user/' + organisasiID,
                         type: 'GET',
                         data: {
                             '_token': '{{ csrf_token() }}'
@@ -210,17 +229,13 @@
                             // console.log(data);
                             if (data) {
                                 $('#jabatan').empty();
-                                $('#jabatan').append(
-                                    '<option value"">---pilih jabatan---</option>');
                                 $.each(data, function(key, jabatan) {
                                     $('select[name="jabatan"]').append(
                                         '<option value="' + jabatan.id + '">' +
                                         jabatan.name + '</option>'
                                     )
                                 });
-                            } else {
-
-                            }
+                            } else {}
                         }
                     });
                 } else {

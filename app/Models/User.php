@@ -49,7 +49,7 @@ class User extends Authenticatable
         return self::count();
     }
 
-    public function jabatans(): BelongsTo
+    public function jabatans()
     {
         return $this->belongsTo(jabatan::class);
     }

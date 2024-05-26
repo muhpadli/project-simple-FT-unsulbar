@@ -15,10 +15,17 @@
 @section('title')
     Dashboard Pimpinan| FT Unsulbar
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -64,30 +71,30 @@
                     </div>
                 </div>
             </div>
-            @if (auth()->user()->level_user_id == 2)
-            <div class="card card-outline card-info">
-                <div class="card-header">
-                    <div class="card-title">
-                        My Task By Status
+            @if ($level_user_id->tingkat > 1)
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <div class="card-title">
+                            My Task By Status
+                        </div>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="row justify-content-md-start">
-                        @for ($i = 0; $i < count($icon); $i++)
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-{{ $color[$i] }}">
-                                    <span class="info-box-icon"><i class="fa {{ $icon[$i] }}"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">{{ $title_tugas[$i] }}</span>
-                                        <span class="info-box-number"><a style="text-decoration: none; color: white"
-                                                href="{{ route('detail-where-staus', $i + 1) }}">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
+                    <div class="card-body">
+                        <div class="row justify-content-md-start">
+                            @for ($i = 0; $i < count($icon); $i++)
+                                <div class="col-md-3 col-sm-6 col-12">
+                                    <div class="info-box bg-gradient-{{ $color[$i] }}">
+                                        <span class="info-box-icon"><i class="fa {{ $icon[$i] }}"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">{{ $title_tugas[$i] }}</span>
+                                            <span class="info-box-number"><a style="text-decoration: none; color: white"
+                                                    href="{{ route('detail-where-staus', $i + 1) }}">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endfor
+                            @endfor
+                        </div>
                     </div>
                 </div>
-            </div>
             @endif
         </div>
     </section>

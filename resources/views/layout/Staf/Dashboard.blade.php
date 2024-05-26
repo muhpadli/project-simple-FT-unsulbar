@@ -1,17 +1,31 @@
 @php
     $icon = ['fa-hourglass-start', 'fa-spinner', 'fa-step-forward', 'fa-pen-fancy', 'fa-check', 'fa-check-circle'];
     $color = ['maroon', 'info', 'gray-dark', 'warning', 'olive', 'primary'];
-    $title_tugas = ['Task Not Register', 'Task On-progress', 'Task Pending', 'Task Revised', 'Task Submitted', 'Task Approved'];
+    $title_tugas = [
+        'Task Not Register',
+        'Task On-progress',
+        'Task Pending',
+        'Task Revised',
+        'Task Submitted',
+        'Task Approved',
+    ];
 @endphp
 
 @extends('Master')
 @section('title')
     Dashboard | FT Unsulbar
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">

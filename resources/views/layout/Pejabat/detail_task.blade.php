@@ -11,10 +11,17 @@
         }
     </style>
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -24,8 +31,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Task Duties</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('users') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('users/task-duties') }}">Task Duties</a></li>
                         <li class="breadcrumb-item active">Detail Task</li>
                     </ol>
                 </div>
@@ -53,7 +60,7 @@
                             </div>
                             @if ($task->name_status != 'accepted')
                                 <div class="header-right" style="float: right">
-                                    <div class="badge"><a href="{{ route('DetailTask.edit', $task->id) }}"
+                                    <div class="badge"><a href="{{ route('task-duties.edit', $task->id) }}"
                                             class="btn btn-info btn-sm "> <i class="fa fa-edit"></i> Edit</a></div>
                                 </div>
                             @endif

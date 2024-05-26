@@ -12,27 +12,27 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-header">Menu</li>
                 <li class="nav-item active menu open"><!--menu open/active-->
-                    <a href="/" class="nav-link {{ $active === 'beranda' ? 'active' : '' }}">
+                    <a href="{{ url('/users') }}" class="nav-link {{ $active === 'beranda' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
-                        <p>Dashboard
+                        <p>Beranda
                         </p>
                     </a>
                 </li>
                 <li class="nav-item active menu open"><!--menu open/active-->
-                    <a href="{{ route('organisasi') }}"
+                    <a href="{{ url('users/organisasi') }}"
                         class="nav-link {{ $active === 'manageOrganisasi' ? 'active' : '' }} ">
                         <i class="nav-icon fas fa-sitemap"></i>
                         <p>
-                            Manage Organization
+                            Organisasi
                         </p>
                     </a>
                 </li>
                 <li class="nav-item active menu open"><!--menu open/active-->
-                    <a href="{{ route('ManageUsers.index') }}"
+                    <a href="{{ route('pegawai.index') }}"
                         class="nav-link {{ $active === 'manageUser' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
-                            Manage Users
+                            Pegawai
                         </p>
                     </a>
                 </li>

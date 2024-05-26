@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Gender;
 use App\Models\jabatan;
+use App\Models\Level_user;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Profil;
@@ -102,39 +103,64 @@ class DatabaseSeeder extends Seeder
         //     'name_role' => 'staf'
         // ]);
 
-        Priority::create([
-            'name'   => 'low'
+        // Priority::create([
+        //     'name'   => 'low'
+        // ]);
+
+        // Priority::create([
+        //     'name'   => 'medium'
+        // ]);
+        // Priority::create([
+        //     'name'   => 'high'
+        // ]);
+        // Priority::create([
+        //     'name'   => 'urgent'
+        // ]);
+
+
+        // Status::create([
+        //     'name_status'   => 'register'
+        // ]);
+
+        // Status::create([
+        //     'name_status'   => 'on progres'
+        // ]);
+        // Status::create([
+        //     'name_status'   => 'pending'
+        // ]);
+        // Status::create([
+        //     'name_status'   => 'revisi'
+        // ]);
+        // Status::create([
+        //     'name_status'   => 'finish'
+        // ]);
+        // Status::create([
+        //     'name_status'   => 'accepted'
+        // ]);
+
+        Level_user::create([
+            'name_level'    =>  'Dekan',
+            'role_id'       =>  2
         ]);
 
-        Priority::create([
-            'name'   => 'medium'
-        ]);
-        Priority::create([
-            'name'   => 'high'
-        ]);
-        Priority::create([
-            'name'   => 'urgent'
+        Level_user::create([
+            'name_level'    =>  'Wakil Dekan 1',
+            'role_id'       =>  2
         ]);
 
-
-        Status::create([
-            'name_status'   => 'register'
+        Level_user::create([
+            'name_level'    =>  'Wakil Dekan 2',
+            'role_id'       =>  2
         ]);
 
-        Status::create([
-            'name_status'   => 'on progres'
+        Level_user::create([
+            'name_level'    =>  'Pimpinan Prodi',
+            'role_id'       =>  2
         ]);
-        Status::create([
-            'name_status'   => 'pending'
-        ]);
-        Status::create([
-            'name_status'   => 'revisi'
-        ]);
-        Status::create([
-            'name_status'   => 'finish'
-        ]);
-        Status::create([
-            'name_status'   => 'accepted'
+
+        Level_user::create([
+            'name_level'    =>  'Staf',
+            'role_id'       =>  2
         ]);
     }
 }

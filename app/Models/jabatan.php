@@ -20,8 +20,13 @@ class jabatan extends Model
         return $this->belongsTo(Organization::class);
     }
 
-    public function users(): HasMany
+    public function user(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function level_users()
+    {
+        return $this->belongsTo(Level_user::class);
     }
 }

@@ -17,10 +17,17 @@
         }
     </style>
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -29,7 +36,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/users') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Task Duties</li>
                     </ol>
                 </div>
@@ -57,7 +64,7 @@
                                 </ul>
                             </div>
                             <div class="right-header" style="float: right">
-                                <div class="badge"><a href="{{ route('DetailTask.create') }}" class="btn btn-info btn-sm">
+                                <div class="badge"><a href="{{ route('task-duties.create') }}" class="btn btn-info btn-sm">
                                         <i class="fas fa-plus-square"></i> New Task
                                     </a></div>
                             </div>
@@ -91,7 +98,7 @@
                                                 </td>
                                                 <td>
                                                     <a class="badge badge-info btn-sm"
-                                                        href="{{ route('DetailTask.show', $item->id) }}">
+                                                        href="{{ route('task-duties.show', $item->id) }}">
                                                         <i class="fas fa-eye mr-2">View</i>
                                                     </a>
                                                 </td>
@@ -112,58 +119,55 @@
 
                         <div class="card-body">
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                            data-accordion="false">
-                            <li class="nav-item {{ $active === 'filter-priority' ? 'menu-open' : ' ' }}">
-                                <a href="" class="nav nav-link {{ $active === 'filter-priority' ? 'active' : '' }}"
-                                    style="font-weight: bold;">
-                                    Priority <i class="right fas fa-angle-left"></i>
-                                </a>
-                                <ul class="nav nav-treeview"
-                                    style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
-                                    @foreach ($prioritas_tugas as $key => $item)
-                                        <li>
-                                            <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-priority', $key + 1) }}" 
-                                            @else
-                                                href="{{ route('detail-where-priority', $key + 1) }}" @endif
-                                                class="nav-link small ">
-                                                <span style="display: flexbox; justify-content: center;">
-                                                    <p class="text-dark">{{ Str::ucfirst($item->name) }} @if ($priority === Str::lower($item->name))
-                                                            <i class=' fa fa-check-circle'></i>
-                                                        @endif
-                                                    </p>
-                                                </span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                            <li class="nav-item  {{ $active === 'filter-status' ? 'menu-open' : ' ' }}">
-                                <a href="" class="nav-link {{ $active === 'filter-status' ? 'active' : '' }}"
-                                    style="font-weight: bold;">
-                                    status
-                                    <i class="right fas fa-angle-left"></i>
-                                </a>
-                                <ul class="nav nav-treeview"
-                                    style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
-                                    @foreach ($prioritas_status as $key => $item)
-                                        <li>
-                                            <a @if (auth()->user()->roles_id == 2) href="{{ route('get-task-by-status', $key + 1) }}"
-                                                @else
-                                                    href="{{ route('detail-where-staus', $key + 1) }}" @endif
-                                                class="nav-link small">
-                                                <span style="display: flexbox; justify-content: center;">
-                                                    <p class="text-dark">{{ Str::ucfirst($item->name_status) }}
-                                                        @if ($priority === $item->name_status)
-                                                            <i class='fa fa-check-circle'></i>
-                                                        @endif
-                                                    </p>
-                                                </span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        </ul>
+                                data-accordion="false">
+                                <li class="nav-item {{ $open === 'filter-priority' ? 'menu-open' : ' ' }}">
+                                    <a href=""
+                                        class="nav nav-link {{ $open === 'filter-priority' ? 'active' : '' }}"
+                                        style="font-weight: bold;">
+                                        Priority <i class="right fas fa-angle-left"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview"
+                                        style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                        @foreach ($prioritas_tugas as $key => $item)
+                                            <li>
+                                                <a href="{{ route('get-task-by-priority', $key + 1) }}"
+                                                    class="nav-link small ">
+                                                    <span style="display: flexbox; justify-content: center;">
+                                                        <p class="text-dark">{{ Str::ucfirst($item->name) }} @if ($priority === Str::lower($item->name))
+                                                                <i class=' fa fa-check-circle'></i>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                                <li class="nav-item  {{ $open === 'filter-status' ? 'menu-open' : ' ' }}">
+                                    <a href="" class="nav-link {{ $open === 'filter-status' ? 'active' : '' }}"
+                                        style="font-weight: bold;">
+                                        status
+                                        <i class="right fas fa-angle-left"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview"
+                                        style="list-style-type: none; margin-left: 0; padding-left: 0; line-height: 0.2em">
+                                        @foreach ($prioritas_status as $key => $item)
+                                            <li>
+                                                <a href="{{ route('get-task-by-status', $key + 1) }}"
+                                                    class="nav-link small">
+                                                    <span style="display: flexbox; justify-content: center;">
+                                                        <p class="text-dark">{{ Str::ucfirst($item->name_status) }}
+                                                            @if ($priority === $item->name_status)
+                                                                <i class='fa fa-check-circle'></i>
+                                                            @endif
+                                                        </p>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

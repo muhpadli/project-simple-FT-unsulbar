@@ -5,10 +5,17 @@
 @section('head')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -18,8 +25,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashoard-pimpinan') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard_pejabat.index') }}">Task Duties</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/users') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/users/task-duties') }}">Task Duties</a></li>
                         <li class="breadcrumb-item active">New Task</li>
                     </ol>
                 </div>
@@ -40,7 +47,7 @@
                             <div class="card-body row">
                                 <div class="col">
                                     <div class="form-group">
-                                        @if (auth()->user()->level_user_id == 1)
+                                        @if ($level_user_id->tingkat < 5)
                                             <div class="col"> <!-- Tambahkan kelas mb-0 di sini -->
                                                 <label class="col-form-label">Select
                                                     Department</label>
@@ -52,17 +59,18 @@
                                                 </select>
                                             </div>
                                         @else
-                                            <input type="hidden" name="department_id" id="department"
+                                            <input type="hidden" name="department" id="department"
                                                 value="{{ $position->organisasi_id }}">
                                         @endif
                                         <div class="col">
                                             <label class="col-form-label">Select Position</label>
                                             <select class="form-control" id="sub_department" name="sub_department">
                                                 <option>Select Position</option>
-                                                @if (auth()->user()->level_user_id == 2)
-                                                    @foreach ($jabatan->where('organisasi_id', '=', $position->organisasi_id, ) as $item)
+                                                @if ($level_user_id->tingkat == 5)
+                                                    @foreach ($jabatan->where('organisasi_id', '=', $position->organisasi_id) as $item)
                                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                     @endforeach
+                                                @else
                                                 @endif
                                             </select>
                                         </div>
@@ -139,7 +147,7 @@
                 // console.log(organisasiID);
                 if (departmentID) {
                     $.ajax({
-                        url: '/user_pimpinan/DetailTask/create/' + departmentID,
+                        url: '/users/task-duties/get-jabatan/' + departmentID,
                         type: 'GET',
                         data: {
                             '_token': '{{ csrf_token() }}'
@@ -176,7 +184,7 @@
                 // console.log(organisasiID);
                 if (sub_departmentID) {
                     $.ajax({
-                        url: '/user_pimpinan/DetailTask/createUser/' + sub_departmentID,
+                        url: '/users/task-duties/get-user/' + sub_departmentID,
                         type: 'GET',
                         data: {
                             '_token': '{{ csrf_token() }}'

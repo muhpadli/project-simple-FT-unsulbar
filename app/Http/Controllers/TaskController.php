@@ -27,80 +27,6 @@ class TaskController extends Controller
         ]);
     }
 
-    public function create(){
-        $department = Organization::all();
-        $priority   = Priority::all();
-        $prioritas_tugas = Priority::all();
-        $prioritas_status = Status::all();
-        $jabatan = jabatan::all()->where('id', '!=', auth()->user()->jabatan_id);
-        $position = jabatan::where('id','=',auth()->user()->jabatan_id)->get()->first();
-        return view('layout.Pejabat.newTask',[
-            'department'    => $department,
-            'priority'      => $priority,
-            'active'        => 'none',
-            'prioritas_status'  => $prioritas_status,
-            'prioritas_tugas'  => $prioritas_tugas,
-            'position'      => $position,
-            'jabatan'       => $jabatan
-        ]
-    );
-    }
-
-    public function edit(string $id){
-        $department = Organization::all();
-        $priority   = Priority::all();
-        $prioritas_tugas = Priority::all();
-        $prioritas_status = Status::all();
-        $tugas  = DB::table('tasks')
-            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
-            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
-            ->join('users', 'users.id', '=', 'tasks.user_id')
-            ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
-            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-            ->select('tasks.id', 'tasks.title_task', 'tasks.date_start','tasks.keterangan','tasks.excerpt', 'tasks.deksripsi', 'users.name AS name_user', 'jabatans.name AS name_jabatan', 'statuses.name_status', 'priorities.id AS id_prioritas','priorities.name', 'organizations.name AS department', 'organizations.id AS id_departement', 'jabatans.id AS id_jabatan','users.id AS id_user')
-            ->where('tasks.id', '=', $id)
-            ->get();
-
-            return view('layout.Pejabat.edit_tugas', [
-                'department'    => $department,
-                'priority'  => $priority,
-                'active'    => 'none',
-                'task'      => $tugas->first(),
-                'prioritas_tugas'   => $prioritas_tugas,
-                'prioritas_status'   => $prioritas_status,
-            ]
-        );
-    }
-    public function show(string $id){
-        $priority = Priority::all()->first;
-        $status   = DB::table('statuses')
-        ->select('*')
-        ->where('role_id','=',2)
-        ->get();
-        $riwayat_tugas = riwayat_tugas::where('tugas_id','=',$id)->get()->first();
-        $prioritas_tugas = Priority::all();
-        $prioritas_status = Status::all();
-        $tugas  = DB::table('tasks')
-            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
-            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
-            ->join('users', 'users.id', '=', 'tasks.user_id')
-            ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
-            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-            ->select('tasks.id', 'tasks.title_task', 'statuses.bg_color AS bg_warna', 'tasks.date_start','tasks.keterangan','tasks.excerpt', 'tasks.deksripsi', 'users.name AS name_user', 'jabatans.name AS name_jabatan', 'statuses.name_status','priorities.name', 'organizations.name AS department')
-            ->where('tasks.id', '=', $id)
-            ->get();
-
-            return view('layout.Pejabat.detail_task', [
-                'status'            =>  $status,
-                'tugas_terkirim'    => $riwayat_tugas,
-                'priority'  => $priority,
-                'active'    => 'none',
-                'task'      => $tugas->first(),
-                'prioritas_tugas'   => $prioritas_tugas,
-                'prioritas_status'  =>$prioritas_status
-            ]);
-        }
-
     public function store(Request $request){
         $validate   = $request->validate([
             'user_id'           => 'required',
@@ -117,7 +43,6 @@ class TaskController extends Controller
 
 
         
-        
         if($request->keterangan){
             $validate['keterangan'] = $request->keterangan;
             Task::create($validate);
@@ -128,36 +53,11 @@ class TaskController extends Controller
 
         Alert::success('Good Job', 'Tugas berhasil dibuat!');
 
-        return redirect()->route('dashboard_pejabat.index');
+        return redirect()->route('task-duties.index');
 
     }
 
-    public function update(Request $request, $id) {
-        $validate = $request->validate([
-            'user_id'       => 'required',
-            'priority_id'   => 'required',
-            'title_task'    => 'required|min:3',
-            'deksripsi'     => 'required|min:10',
-        ]);
-        $validate['updated_at']   = Carbon::now('Asia/Makassar');
-
-    
-        $validate['excerpt'] = Str::limit(strip_tags($request->deksripsi), 30);
-    
-        if ($request->keterangan) {
-            $validate['keterangan'] = $request->keterangan;
-        }
-    
-        // Menemukan tugas berdasarkan ID yang diterima dari URL
-        $task = Task::findOrFail($id);
-    
-        // Memperbarui data tugas dengan data yang telah divalidasi
-        $task->update($validate);
-    
-        Alert::success('Good Job', 'Tugas berhasil diperbarui!');
-    
-        return redirect()->route('DetailTask.show',$id);
-    }
+   
     
     public function destroy($id){
         $task = Task::findOrFail($id);
@@ -168,9 +68,20 @@ class TaskController extends Controller
     }
 
     public function getJabatan($id){
-        $jabatan = jabatan::where([
-            ["organisasi_id",$id],
-            ["id",'!=', auth()->user()->jabatan_id]
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+        $jabatan = jabatan::join('level_users', 'level_users.id', '=', 'level_users_id')
+        ->select('jabatans.*', 'level_users.tingkat')
+        ->where([
+            ["jabatans.organisasi_id",$id],
+            ["jabatans.id",'!=', auth()->user()->jabatan_id],
+            ["level_users.tingkat",'>', $level_user_id->tingkat]
         ])->get();
         return response()->json($jabatan);
     }

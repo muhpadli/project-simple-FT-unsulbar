@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Expr\Cast\String_;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -27,6 +28,7 @@ class PejabatController extends Controller
         $prioritas_tugas = Priority::all();
         $task = Task::all()->where('id_creator','=',auth()->user()->id);
         return view('layout.Pejabat.Dashboard', [
+            'open'      => '',
             'active'    => 'beranda',
             'priority'  => 'none',
             'task'      => $task,
@@ -57,7 +59,8 @@ class PejabatController extends Controller
                     $priority = Priority::where('id','=',$id)->first();
                     $tugasAll  = Task::all();
         return view('layout.Pejabat.index', [
-            'active'    => 'filter-priority',
+            'open'      => 'filter-priority',
+            'active'    => 'task',
             'task'      => $tugas,
             'priority'  => $priority->name,
             'prioritas_tugas'   =>  $prioritas_tugas,
@@ -87,7 +90,8 @@ class PejabatController extends Controller
 
                     $priority = Status::where('id','=',$id)->first();
         return view('layout.Pejabat.index', [
-            'active'    => 'filter-status',
+            'active'    => 'task',
+            'open'      => 'filter-status',
             'task'      => $tugas,
             'priority'  => $priority->name_status,
             'prioritas_status' => $prioritas_status,
@@ -118,6 +122,7 @@ class PejabatController extends Controller
 
         return view('layout.Pejabat.index', [
             'active'    => 'task',
+            'open'      => '',
             'task'      => $tugas,
             'priority'  => 'none',
             'prioritas_status'  => $prioritas_status,
@@ -126,23 +131,96 @@ class PejabatController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id){
-        $validasi_data = $request->validate([
-            'status_id'    => 'required'
-        ]);
+    // public function update(Request $request, $id){
+    //     $validasi_data = $request->validate([
+    //         'status_id'    => 'required'
+    //     ]);
 
-        $task = Task::findOrFail($id);
-        // Memperbarui data tugas dengan data yang telah divalidasi
-        $task->update($validasi_data);
+    //     $task = Task::findOrFail($id);
+    //     // Memperbarui data tugas dengan data yang telah divalidasi
+    //     $task->update($validasi_data);
     
-        Alert::success('Good Job', 'Status Tugas diperbarui!');
-        return redirect()->route('DetailTask.show', $id);
+    //     Alert::success('Good Job', 'Status Tugas diperbarui!');
+    //     return redirect()->route('DetailTask.show', $id);
+    // }
+    public function create(){
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+        $department = Organization::all();
+        $priority   = Priority::all();
+        // $jabatan = jabatan::all()->where('id', '!=', auth()->user()->jabatan_id);
+        $jabatan = jabatan::join('level_users', 'level_users.id', '=', 'level_users_id')
+        ->select('jabatans.*', 'level_users.tingkat')
+        ->where('level_users.tingkat', '>', $level_user_id->tingkat)
+        ->get();
+        $position = jabatan::where('id','=',auth()->user()->jabatan_id)->get()->first();
+        return view('layout.Pejabat.newTask',[
+            'department'    => $department,
+            'priority'      => $priority,
+            'active'        => 'task',
+            'position'      => $position,
+            'jabatan'       => $jabatan
+        ]
+    );
     }
 
+    public function edit(string $id){
+        $department = Organization::all();
+        $priority   = Priority::all();
+        $position = jabatan::where('id','=',auth()->user()->jabatan_id)->get()->first();
+        $tugas  = DB::table('tasks')
+            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
+            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
+            ->join('users', 'users.id', '=', 'tasks.user_id')
+            ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
+            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
+            ->select('tasks.id', 'tasks.title_task', 'tasks.date_start','tasks.keterangan','tasks.excerpt', 'tasks.deksripsi', 'users.name AS name_user', 'jabatans.name AS name_jabatan', 'statuses.name_status', 'priorities.id AS id_prioritas','priorities.name', 'organizations.name AS department', 'organizations.id AS id_departement', 'jabatans.id AS id_jabatan','users.id AS id_user')
+            ->where('tasks.id', '=', $id)
+            ->get();
+
+            return view('layout.Pejabat.edit_tugas', [
+                'department'    => $department,
+                'priority'  => $priority,
+                'position'  => $position,
+                'active'    => 'task',
+                'task'      => $tugas->first(),
+            ]
+        );
+    }
+    public function show(string $id){
+        $priority = Priority::all()->first;
+        $riwayat_tugas = riwayat_tugas::where('tugas_id','=',$id)->get()->first();
+        $prioritas_tugas = Priority::all();
+        $prioritas_status = Status::all();
+        $tugas  = DB::table('tasks')
+            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
+            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
+            ->join('users', 'users.id', '=', 'tasks.user_id')
+            ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
+            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
+            ->select('tasks.id', 'tasks.title_task', 'statuses.bg_color AS bg_warna', 'tasks.date_start','tasks.keterangan','tasks.excerpt', 'tasks.deksripsi', 'users.name AS name_user', 'jabatans.name AS name_jabatan', 'statuses.name_status','priorities.name', 'organizations.name AS department')
+            ->where('tasks.id', '=', $id)
+            ->get();
+
+            return view('layout.Pejabat.detail_task', [
+                'tugas_terkirim'    => $riwayat_tugas,
+                'priority'  => $priority,
+                'active'    => 'task',
+                'task'      => $tugas->first(),
+                'prioritas_tugas'   => $prioritas_tugas,
+                'prioritas_status'  =>$prioritas_status
+            ]);
+        }
     public function update_user(Request $request, $id){
         
         $data = $request->validate([
-            'nama'      =>  'required|min:3',
+            'nama'      =>  'required|min:5',
             'nip'       =>  'max:18',
             'kontak'    =>  'required|min:11',
             'email'     =>  'email',
@@ -207,6 +285,7 @@ class PejabatController extends Controller
                 } 
             }
         }else{
+            dd('yah');
             $user->update([
                 'name'      => $data['nama'],
                 'email'     => $data['email'],
@@ -250,30 +329,37 @@ class PejabatController extends Controller
             }
         }
 
-        return redirect()->route('ManageUsers.show', $id)->with(['success' => 'Data Profil Berhasil Diubah!']);
+        return redirect()->route('pegawai.show', $id)->with(['success' => 'Data Profil Berhasil Diubah!']);
 
     }
 
-    public function draft_jabatan($id){
-        $organisasi = Organization::findOrFail($id);
-        $users = User::orderBy('created_at', 'desc')->paginate();
-        $user = DB::table('users')
-        ->join('genders', 'users.genders_id', '=', 'genders.id')
-        ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
-        ->select('users.name', 'users.id', 'users.jabatan_id', 'users.image', 'jabatans.name AS jabName')
-        ->orderBy('users.updated_at', 'desc')
-        ->where('jabatans.organisasi_id','=',$id)
-        ->get();
-        $roles = Role::all();
-        $data_jabatan = jabatan::all()->where('organisasi_id', '=', $id);
-        return view('layout.Admin.listJabatan',[
-            'organisasi'=> $organisasi,
-            'users'     => $users,
-            'user'      => $user,
-            'active'    => 'manageOrganisasi',
-            'data'      => $data_jabatan, 
-            'roles'     => $roles     
+    public function update(Request $request, $id) {
+        $validate = $request->validate([
+            'user_id'       => 'required',
+            'priority_id'   => 'required',
+            'title_task'    => 'required|min:3',
+            'deksripsi'     => 'required|min:10',
         ]);
+        $validate['updated_at']   = Carbon::now('Asia/Makassar');
+
+    
+        $validate['excerpt'] = Str::limit(strip_tags($request->deksripsi), 30);
+    
+        if ($request->keterangan) {
+            $validate['keterangan'] = $request->keterangan;
+        }
+    
+        // Menemukan tugas berdasarkan ID yang diterima dari URL
+        $task = Task::findOrFail($id);
+    
+        // Memperbarui data tugas dengan data yang telah divalidasi
+        $task->update($validate);
+    
+        Alert::success('Good Job', 'Tugas berhasil diperbarui!');
+    
+        return redirect()->route('task-duties.show',$id);
     }
+
+    
    
 }

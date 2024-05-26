@@ -4,49 +4,60 @@
         <span class="brand-text font-weight-light protest-guerrilla-regular"><b>SIMPLE | Fakultas Teknik</b></span>
     </a>
 
+
+
     <!-- Sidebar -->
     <div class="sidebar ">
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-header">Menu</li>
                 <li class="nav-item active">
-                    <a @if (auth()->user()->roles_id == 2) href="{{ route('dashoard-pimpinan') }}" @else  href="{{ route('user_staf.index') }}" @endif
-                        class="nav-link {{ $active === 'beranda' ? 'active' : '' }}">
+                    <a href="{{ url('/users') }}" class="nav-link {{ $active === 'beranda' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Dashboard
                         </p>
                     </a>
                 </li>
-                @if (auth()->user()->level_user_id == 1)
+                @if ($level_user_id->tingkat  == 1)
                     <li class="nav-item">
-                        <a href="{{ route('dashboard_pejabat.index') }}"
+                        <a href="{{ route('task-duties.index') }}"
                             class="nav-link {{ $active === 'task' ? 'active' : '' }}">
                             <i class="nav-icon fas fa-list"></i>
                             <p>Task Duties</p>
                         </a>
                     </li>
-                @elseif (auth()->user()->level_user_id == 2)
+                @elseif ($level_user_id->tingkat > 1 && $level_user_id->tingkat < 6)
                     <li class="nav-item">
-                        <a href="{{ route('dashboard_pejabat.index') }}" class="nav-link">
+                        <a href="{{ route('task-duties.index') }}"
+                            class="nav-link {{ $active === 'task' ? 'active' : '' }}">
                             <i class="nav-icon fas fa-list"></i>
                             <p>Task Duties</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('details-tugas-staf') }}" class="nav-link">
+                        <a href="{{ url('users/my-task') }}" class="nav-link {{ $active === 'my-task' ? 'active' : '' }}">
                             <i class="nav-icon fas fa-pen"></i>
                             <p>My Tasks</p>
                         </a>
                     </li>
                 @else
                     <li class="nav-item">
-                        <a href="{{ route('details-tugas-staf') }}"
-                            class="nav-link {{ $active === 'task' ? 'active' : '' }}">
+                        <a href="{{ url('users/my-task') }}" class="nav-link {{ $active === 'my-task' ? 'active' : '' }}">
                             <i class="nav-icon fas fa-pen"></i>
                             <p>My Tasks</p>
                         </a>
                     </li>
                 @endif
+                <li class="nav-header">
+                    Lainnya
+                </li>
+                <li class="nav-item active">
+                    <a href="{{ url('/users') }}" class="nav-link">
+                        <i class="nav-icon fa fa-settings"></i>
+                        <p>Pengaduan
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

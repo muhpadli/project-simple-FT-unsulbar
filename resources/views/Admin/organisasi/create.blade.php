@@ -1,22 +1,18 @@
 @extends('Master')
 @section('title')
-    Manage Organization | FT Unsulbar
-@endsection
-@section('sidebar')
-    @include('layout.Admin.SidebarAdmin')
+    Tambah Organisasi| FT Unsulbar
 @endsection
 @section('content')
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Edit Organisasi</h1>
+                    <h1>Tambah Organisasi</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('organisasi') }}">Daftar Organisasi</a></li>
-                        <li class="breadcrumb-item active">Edit Organisasi</li>
+                        <li class="breadcrumb-item"><a href="{{ route('organisasi.index') }}">Daftar Organisasi</a></li>
+                        <li class="breadcrumb-item active">Tambah Organisasi</li>
                     </ol>
                 </div>
             </div>
@@ -29,25 +25,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <!-- general form elements -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Edit Organization</h3>
-                        </div>
+                    <div class="card card-outline card-info">
                         <!-- form start -->
-                        <form method="post" action="{{ route('manageOrganization.update', $organisasi->id) }}"
-                            enctype="multipart/form-data">
+                        <form method="post" action="{{ route('organisasi.store') }}" enctype="multipart/form-data">
                             @csrf
-                            @method('PUT')
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label for="nameOrganization">Organization</label>
+                                            <label for="nameOrganization">Nama Organisasi</label>
                                             <div class="input-group">
                                                 <input type="text" name="organisasi"
                                                     class="form-control @error('organisasi') is-invalid @enderror"
-                                                    placeholder="name organization"
-                                                    value="{{ old('organisasi', $organisasi->name) }}" required autofocus>
+                                                    placeholder="name organization" required autofocus>
                                             </div>
                                             @error('organisasi')
                                                 <div class="alert alert-danger mt-2">
@@ -59,7 +49,9 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-info">Update</button>
+                                <a href="{{ route('organisasi.index') }}" class="btn btn-sm btn-info" title="kembali"><i
+                                        class="fa fa-arrow-left"></i></a>
+                                <button type="submit" class="btn btn-sm btn-info" title="tambah data">Tambah</button>
                             </div>
                         </form>
                     </div>

@@ -26,67 +26,70 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 |
 
 */
+Route::prefix('users')->group(function () {
+    //route admin
+    //route manajemen organisasi
+    Route::resource('/organisasi', OrganizationController::class)->middleware('auth');
+    Route::prefix('organisasi')->group(function(){
+        Route::get('/jabatan/{id}',[jabatanController::class, 'show'])->middleware('auth');
+        Route::post('/jabatan/store',[jabatanController::class, 'store'])->middleware('auth');
+        Route::put('/jabatan/update/{id}',[jabatanController::class, 'update'])->middleware('auth');
+        Route::delete('/jabatan/destroy/{id}',[jabatanController::class, 'destroy'])->middleware('auth');
+    });
+    Route::resource('/pegawai', UserController::class)->middleware('auth');
+    Route::prefix('pegawai')->group(function(){
+        Route::put('/update-profile/{id}', [PejabatController::class, 'update_user'])->name('update_user')->middleware('auth');
+        //route memanggil jabatan berdasarkan id organisasi
+        Route::get('/jabatan_user/{id}', [UserController::class,'getJabatan'])->middleware('auth');
+    });
 
-Route::get('/user-pimpinan/{id}', [PejabatController::class, 'draft_jabatan'])->name('viewJabatan')->middleware('auth');
-Route::get('/', [DashboardController::class, 'index'])->name('beranda')->middleware('auth');
+    Route::get('/', [DashboardController::class, 'index'])->name('beranda')->middleware('auth');
+    Route::resource('profil', profilUserControlller::class)->middleware('auth');
 
-Route::get('/admin-beranda', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-Route::get('/organisasi', [DashboardController::class, 'organisasi'])->name('organisasi')->middleware('auth');
+    //route fitur task-duties
+    Route::resource('/task-duties', PejabatController::class)->middleware('auth');
+    Route::prefix('task-duties')->group(function(){
+        Route::get('/filter-by-priority/index={id}', [PejabatController::class, 'get_task_by_priority'])->name('get-task-by-priority')->middleware('auth');
+        Route::get('/filter-by-status/index={id}', [PejabatController::class, 'get_task_by_status'])->name('get-task-by-status')->middleware('auth');
+        // url get jabatan & user untuk keperluan dropdown create & edit task
+        Route::get('get-jabatan/{id}', [TaskController::class, 'getJabatan']);
+        Route::get('get-user/{id}', [TaskController::class, 'getUser']);
+        // route button accepted
+        Route::put('/accepted/{id}', [stafController::class, 'accepted_task'])->name('accepted_task');
+        // route button revisi
+        Route::post('/revision', [stafController::class, 'revision_task'])->name('revision_task');
+    });
 
-Route::get('/manageOrganization', function () {
-    return view('layout.Admin.ManageOrganisasi');
+    //route fitur my-task
+    Route::resource('/my-task', stafController::class)->middleware('auth');
+    Route::prefix('my-task')->group(function(){
+        Route::get('/dashboard_staff', [stafController::class, 'dashboard_staff'])->name('dashboard_staff')->middleware('auth');
+        Route::get('filter-by-status/index={id}', [stafController::class, 'filter_by_status'])->name('detail-where-staus')->middleware('auth');
+        Route::get('filter-by-priority/index={id}', [stafController::class, 'filter_by_priority'])->name('detail-where-priority')->middleware('auth');
+        Route::resource('/riwayat_tugas', riwayatTugasController::class)->middleware('auth');
+
+        // route button pending
+        Route::put('/pending_tugas/{id}', [stafController::class, 'pending_task'])->name('pending_tugas');
+        // route button star working
+        Route::put('/start_working/{id}', [stafController::class, 'start_working_task'])->name('start_working_task');
+
+    });
+
 });
 
-Route::get('/homeAdmin', function () {
-    return view('layout.DashboardAdmin');
-});
-
-Route::get('/here', function(){
-    return view('layout.Staf.index_');
-});
-
-Route::get('page' , function(){
-    return view('layout.landingpage');
-});
-
-Route::resource('/organisasi/add-jabatan', jabatanController::class)->middleware('auth');
-Route::resource('/ManageUsers', UserController::class)->middleware('auth');
-Route::resource('/manageOrganization', OrganizationController::class)->middleware('auth');
-Route::get('/home', [loginController::class, 'index'])->name('home')->middleware('guest');
-Route::post('/login', [loginController::class, 'authenticate'])->name('login')->middleware('guest');
+//route authentication
+Route::post('/login/store', [loginController::class, 'authenticate'])
+    ->name('login')
+    ->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
-Route::get('/profil_user
-/{id}', [UserController::class, 'profil'])->name('profil_user')->middleware('auth');
 
-Route::get('/dashboard-pimpinan/list-task-by-priority/{id}',[PejabatController::class, 'get_task_by_priority'])->name('get-task-by-priority')->middleware('auth');
-Route::get('/dashboard-pimpinan/list-task-by-status/{id}',[PejabatController::class, 'get_task_by_status'])->name('get-task-by-status')->middleware('auth');
-Route::get('/dashboard-pimpinan',[ PejabatController::class, 'beranda'])->name('dashoard-pimpinan')->middleware('auth');
-Route::resource('/dashboard_pejabat', PejabatController::class)->middleware('auth');
-Route::resource('/user_pejabat/DetailTask',TaskController::class)->middleware('auth');
-Route::put('/user_pejabat/DetailTask/edit/{id}', [PejabatController::class, 'update_user'])->name('update_user')->middleware('auth');
+Route::get('/login', [loginController::class, 'index'])
+    ->name('home')
+    ->middleware('guest');
 
+Route::resource('/user_pejabat/DetailTask', TaskController::class)->middleware('auth');
+Route::get('/dashboard-chart', [TaskController::class, 'getTaskByPriority'])->name('getDataTaskbyStatus');
 
-Route::get('/user_staf/detail-tugas',[stafController::class, 'details'])->name('details-tugas-staf')->middleware('auth');
-Route::get('/user_staf/detail-tugas-status/{id}', [stafController::class, 'getTugas'])->name('detail-where-staus')->middleware('auth');
-Route::get('/user_staf/detail-tugas-priority/{id}', [stafController::class, 'getFilter'])->name('detail-where-priority')->middleware('auth');
-Route::resource('/user_staf',stafController::class)->middleware('auth');
-// route button pending
-Route::put('/pending_tugas/{id}', [stafController::class, 'pending_task'])->name('pending_tugas');
-// route button star working
-Route::put('/start_working/{id}', [stafController::class, 'start_working_task'])->name('start_working_task');
-// route button accepted
-Route::put('/accepted/{id}', [stafController::class, 'accepted_task'])->name('accepted_task');
-// route button revisi
-Route::post('/revision', [stafController::class, 'revision_task'])->name('revision_task');
-
-
-Route::get('/jabatan/{id}', [UserController::class, 'getJabatan']);
-Route::get('user_pimpinan/DetailTask/create/{id}', [TaskController::class, 'getJabatan']);
-Route::get('user_pimpinan/DetailTask/createUser/{id}', [TaskController::class, 'getUser']);
-
-Route::resource('/user_staf/riwayat_tugas', riwayatTugasController::class)->middleware('auth');
-
-Route::resource('profil', profilUserControlller::class);
-
-Route::get('/dashboard-chart',[TaskController::class, 'getTaskByPriority'])->name('getDataTaskbyStatus');
-
+Route::get('/char', function(){
+    return view('index');
+});

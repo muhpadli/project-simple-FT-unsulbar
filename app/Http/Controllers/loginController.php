@@ -9,7 +9,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 class loginController extends Controller
 {
     public function index(){
-        return view('layout.Login', ['title' => 'login']);
+        return view('login.index', ['title' => 'login']);
     }
 
     public function authenticate(Request $request){
@@ -21,7 +21,7 @@ class loginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             Alert::success('Login Success!', 'Welcome to Simple!');
-            return redirect()->intended(route('beranda'));
+            return redirect('/users');
         }
 
         return back()->with('loginError', 'Username atau Password salah!');
@@ -35,6 +35,6 @@ class loginController extends Controller
         $request->session()->regenerateToken();
 
         Alert::success('Good Job!', 'Anda berhasil keluar dari sistem!');
-        return redirect('/home');
+        return redirect('/login');
     }
 }

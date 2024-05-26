@@ -18,10 +18,17 @@
         }
     </style>
 @endsection
-@section('sidebar')
-    @include('layout.Sidebar')
-@endsection
 @section('content')
+    @php
+        $user_id = auth()->user()->id;
+        $level_user_id = DB::table('users')
+            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            ->join('level_users', 'level_users.id', '=', 'jabatans.level_users_id')
+            ->select('level_users.tingkat')
+            ->where('users.id', '=', $user_id)
+            ->get()
+            ->first();
+    @endphp
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -30,7 +37,8 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('user_staf.index') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ url('/users') }}">Dashboard</a></li>
+                   
                         <li class="breadcrumb-item active">My Tasks</li>
                     </ol>
                 </div>
@@ -69,7 +77,7 @@
                                             <td><span class="badge bg-{{ $item->bg_color }} p-1"
                                                     style="width: 75px;">{{ $item->name_status }}</span></td>
                                             <td>
-                                                <a href="{{ route('user_staf.show', $item->id) }}"
+                                                <a href="{{ route('my-task.show', $item->id) }}"
                                                     class="badge badge-primary p-1 btn-sm">
                                                     <i class="fas fa-eye ml-2 mr-2">View</i>
                                                 </a>
@@ -108,9 +116,9 @@
                         <div class="card-body">
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                                 data-accordion="false">
-                                <li class="nav-item {{ $active === 'filter-priority' ? 'menu-open' : ' ' }}">
+                                <li class="nav-item {{ $open === 'filter-priority' ? 'menu-open' : ' ' }}">
                                     <a href=""
-                                        class="nav nav-link {{ $active === 'filter-priority' ? 'active' : '' }}"
+                                        class="nav nav-link {{ $open === 'filter-priority' ? 'active' : '' }}"
                                         style="font-weight: bold;">
                                         Priority <i class="right fas fa-angle-left"></i>
                                     </a>
@@ -131,8 +139,8 @@
                                         @endforeach
                                     </ul>
                                 </li>
-                                <li class="nav-item  {{ $active === 'filter-status' ? 'menu-open' : ' ' }}">
-                                    <a href="" class="nav-link {{ $active === 'filter-status' ? 'active' : '' }}"
+                                <li class="nav-item  {{ $open === 'filter-status' ? 'menu-open' : ' ' }}">
+                                    <a href="" class="nav-link {{ $open === 'filter-status' ? 'active' : '' }}"
                                         style="font-weight: bold;">
                                         status
                                         <i class="right fas fa-angle-left"></i>

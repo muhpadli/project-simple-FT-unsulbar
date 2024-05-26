@@ -26,7 +26,7 @@ class profilUserControlller extends Controller
             ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
             ->join('genders', 'genders.id', '=', 'users.genders_id')
-            ->select('users.name', 'profils.NIP', 'profils.kontak', 'users.email', 'genders.namaGender AS jk', 'organizations.name AS nama_organisasi', 'jabatans.name AS nama_jabatan', 'users.jabatan_id', 'profils.alamat', 'users.image', 'riwayat_pendidikans.strata_1', 'riwayat_pendidikans.strata_2', 'riwayat_pendidikans.strata_3')
+            ->select('users.name AS nama', 'profils.NIP', 'profils.kontak', 'users.email', 'genders.namaGender AS jk', 'organizations.name AS nama_organisasi', 'jabatans.name AS nama_jabatan', 'users.jabatan_id', 'profils.alamat', 'users.image', 'riwayat_pendidikans.strata_1', 'riwayat_pendidikans.strata_2', 'riwayat_pendidikans.strata_3')
             ->where('users.id', '=', auth()->user()->id)
             ->get()
             ->first();
@@ -69,10 +69,11 @@ class profilUserControlller extends Controller
 
         $user = User::findOrFail($id);
         $profil = Profil::findOrFail(auth()->user()->profil_id);
+        $imageOld = $user->image;
 
         if ($request->hasFile('image')) {
-            if ($request->oldImage) {
-                Storage::delete($request->oldImage);
+            if (!empty($imageOld)) {
+                Storage::delete($imageOld);
             }
             $data['image'] = $request->file('image')->store('post-images');
 

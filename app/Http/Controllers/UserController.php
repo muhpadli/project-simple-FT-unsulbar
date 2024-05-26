@@ -22,29 +22,15 @@ use function Laravel\Prompts\select;
 class UserController extends Controller
 {
     public function index(){
-        $gender = Gender::all();
-        $role = Role::all();
-        $users = User::orderBy('updated_at', 'desc')->paginate();
-        $user = DB::table('users')
-        ->join('genders', 'users.genders_id', '=', 'genders.id')
-        ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
-        ->select('users.name', 'jabatan_id AS jabId', 'users.image', 'jabatans.name AS jabName')
-        ->orderBy('users.updated_at', 'desc')
+        $users = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        ->join('profils', 'profils.id', '=', 'users.profil_id')
+        ->join('roles', 'roles.id', '=', 'users.roles_id')
+        ->select('users.name', 'users.id', 'jabatans.name as nama_jabatan', 'profils.NIP')
+        ->where('roles_id', '!=', 1)
         ->get();
-        
-        $prioritas_tugas = Priority::all();
-        $prioritas_status = Status::all();
-        $organisasi = Organization::all();
-        return view('layout.Admin.listUser',[
-            'organization'  => $organisasi,
-            'genders'       => $gender,
-            'roles'         => $role,
-            'user'          => $user,
+        return view('Admin.pegawai.index',[
+            'users'          => $users,
             'active'        => 'manageUser',
-            'users'         => $users,
-            'prioritas_tugas'   => $prioritas_tugas,
-            'prioritas_status'   => $prioritas_status,
-            'priority'  => 'none',
         ]);
     }
 
@@ -78,9 +64,10 @@ class UserController extends Controller
         'jabatans.organisasi_id', 'profils.alamat')
         ->where('users.id', '=', $id)
         ->get()->first();
+
                     
 
-        return view('layout.Admin.UserDetail',[
+        return view('Admin.pegawai.show',[
             'story_study'   => $study_in_history,
             'user'          => $user,
             'profil'        => $profil,
@@ -96,50 +83,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function profil(string $id){
-        $user = User::findOrFail($id);
-        $gender = Gender::all();
-        $profil = Profil::all();
-        $role   = Role::all();
-        $organisasi = Organization::all();
-        $detail = DB::table('users')
-        ->join('profils', 'profils.id', '=', 'users.profil_id')
-        ->join('riwayat_pendidikans', 'users.id', '=', 'riwayat_pendidikans.user_id')
-        ->join('genders', 'genders.id', '=', 'users.genders_id')
-        ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-        ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-        ->select('users.name', 'users.email', 'profils.NIP', 'profils.kontak', 'genders.namaGender',  'users.genders_id', 
-        'profils.alamat', 'organizations.name AS name_organisasi', 'jabatans.name AS nama_jabatan','users.jabatan_id', 'users.roles_id', 'users.username', 'users.password', 'riwayat_pendidikans.strata_1',  'riwayat_pendidikans.strata_2',  'riwayat_pendidikans.strata_3')
-        ->where('users.id', '=', $id)
-        ->get()->first();
-
-        $detail2 = DB::table('users')
-        ->join('profils', 'profils.id', '=', 'users.profil_id')
-        ->join('genders', 'genders.id', '=', 'users.genders_id')
-        ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-        ->select('users.name', 'users.email', 'profils.NIP', 'profils.kontak', 'genders.namaGender',  'users.genders_id', 
-        'jabatans.organisasi_id', 'profils.alamat')
-        ->where('users.id', '=', $id)
-        ->get()->first();
-        $prioritas_tugas = Priority::all();
-        $prioritas_status = Status::all();
-                    
-
-        return view('layout.profil_user',[
-            'user'          => $user,
-            'profil'        => $profil,
-            'data'          => $detail,
-            'data2'         => $detail2,
-            'gender'        => $gender,
-            'organisasi'    => $organisasi,
-            'roles'         => $role,
-            'active'        => 'none',
-            'prioritas_tugas'   =>$prioritas_tugas,
-            'prioritas_status'   =>$prioritas_status,
-            'priority'  => 'none',
-        ]);
-    }
-
     public function create(){
         $gender = Gender::all();
         $role = Role::all();
@@ -150,7 +93,7 @@ class UserController extends Controller
         $prioritas_tugas = Priority::all();
 
         $organisasi = Organization::all();
-        return view('layout.Admin.ManageUsers',[
+        return view('Admin.pegawai.create',[
             'organization' => $organisasi,
             'genders' => $gender,
             'roles' => $role,
@@ -164,26 +107,44 @@ class UserController extends Controller
     public function store(Request $request){
         $validated = $request->validate([
             'nama_lengkap'  => 'required|min:4',
-            'nip'       =>  'max:18',
+            'nip'       => 'nullable|max:18|min:15',
             'kontak'    => 'required|min:11',
             'gender'    => 'required',
+            'jabatan'   => 'required',
             'email'     => 'required|unique:users|email:dns',
-            'alamat'    => 'required|min:4',
+            'alamat'    => 'required|min:5',
             'role'      => 'required',
-            'username'  => 'required|unique:users|min:4',
-            'password'  => 'required|unique:users|min:4'
-        ]);
+            'username'  => 'required|unique:users|min:5',
+            'password'  => 'required|unique:users|min:5'
+        ],[
+            'nama_lengkap.required' => 'nama lengkap tidak boleh dikosong',
+            'nama_lengkap.min'  => 'nama kurang dari 4 karakter',
+            'nip.min'           => 'nip minimal terdiri atas 15 karakter',
+            'nip.max'           => 'nip maksimal terdiri atas  18 karakter',
+            'kontak.required'   => 'kontak tidak boleh dikosongkan',
+            'kontak.min'        => 'panjang kontak minimal 11 karakter',
+            'email.required'    => 'email tidak boleh dikosongkan',
+            'email.unique'      => 'email tidak boleh sama dengan pegawai lain',
+            'alamat.required'   => 'alamat tdiak bole dikosongkan' ,
+            'alamat.min'        => 'alamat minimal berisi 5 karakter',
+            'username.required' => 'username tidak boleh dikosongkan',
+            'username.unique'   => 'username tidak boleh sama dengan pengguna lain',
+            'username.min'      => 'username minimal berisi 5 karakter',
+            'password.required' => 'password tidak boleh dikosongkan',
+            'password.unique'   => 'password tidak boleh sama dengan pengguna lain',
+            'password.min'   => 'password minimal berisi 5 karakter',
+        ]
+    );
 
         if($request->file('image')){
-
             $validated['image'] = $request->file('image')->store('post-images');
         }
 
         $validated['password'] = Hash::make($validated['password']);
-        
+        $nip = (!empty($request->nip))? $request->nip : '-';
 
         Profil::create([
-            'NIP'       => $validated['nip'],
+            'NIP'       => $nip,
             'kontak'    => $validated['kontak'],
             'alamat'    => $validated['alamat']
         ]);
@@ -195,6 +156,7 @@ class UserController extends Controller
             'name'      => $validated['nama_lengkap'],
             'username'  => $validated['username'],
             'email'     => $validated['email'],
+            'jabatan_id'     => $validated['jabatan'],
             'password'  => $validated['password'],
             'genders_id'=> $validated['gender'],
             'roles_id'  => $validated['role'],
@@ -209,10 +171,22 @@ class UserController extends Controller
         ]);
         
         Alert::success('Good Job', 'User baru berhasil ditambahkan!');
-        return redirect()->route('dashboard');
+        return redirect('/users/pegawai');
 
     }
 
+    public function destroy($id){
+        $user = User::findOrFail($id);
+        $oldImage = $user->image;
+        if(!empty($oldImage)){
+            Storage::delete($oldImage);
+        }
+        $user->delete();
+        
+        Alert::success('Good Job', 'User berhasil dihapus!');
+
+        return back();
+    }
     public function getJabatan($id){
         $jabatan = jabatan::where("organisasi_id",$id)->get();
         return response()->json($jabatan);

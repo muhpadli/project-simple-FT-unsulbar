@@ -17,7 +17,6 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('AdminLTE-3.2.0') }}/dist/css/adminlte.min.css">
     <style>
-
         main {
             display: flex;
             width: 100%;
@@ -36,7 +35,6 @@
             margin: auto;
             align-self: stretch;
         }
-
     </style>
 
     <!-- Bootstrap CSS -->
@@ -47,19 +45,17 @@
 <body class="hold-transition sidebar-collapse">
     @include('sweetalert::alert')
     <div class="wrapper ">
-
         <!-- Content Wrapper. Contains page content -->
         <div class="content">
-            <!-- /.content-header -->
-
             <!-- Main content -->
             <div class="content m-0">
                 <main class="row d-flex ">
-                    <img class="col-md-8 d-none d-md-block" src="{{ asset('storage/post-images/perpustakaan.jpg') }}" alt="">
-                    <div class="form-login">
+                    <img class="col-md-8 d-none d-md-block" src="{{ asset('storage/post-images/perpustakaan.jpg') }}"
+                        alt="">
+                    <div class="form-login  border rounded-3 p-5">
                         <h4 class="protest-guerrilla-regular">SIMPLE | Fakultas Teknik</h4>
                         <p class="login-box-msg">Sign in to start your session</p>
-                        <form action="{{ route('login') }}" method="POST">
+                        <form action="{{ url('login/store') }}" method="POST">
                             @csrf
                             @if (session()->has('success'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -109,6 +105,13 @@
                                         In</button>
                                 </div>
                                 <!-- /.col -->
+                            </div>
+                            <div class="row">
+                                <div class="col mt-2">
+                                    <p class="login-box-msg text-sm">created by <br>
+                                        <a href=""><strong>KPI Prodi Informatika 2024</strong></a>
+                                    </p>
+                                </div>
                             </div>
                         </form>
                 </main>

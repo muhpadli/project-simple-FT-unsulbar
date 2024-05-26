@@ -13,19 +13,58 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class stafController extends Controller
 {
-    public function index(){
+    
+    
+    public function dashboard_staff(){
         $prioritas_tugas = Priority::all();
         $prioritas_status = Status::all();
         $status = User::all();
         return view('layout.Staf.Dashboard',[
             'active' => 'beranda',
+            'open'  => '',
             'status' => $status,
             'priority'  => 'none',
             'prioritas_tugas'   => $prioritas_tugas,
             'prioritas_status'  => $prioritas_status
         ]);
     }
-    public function getFilter($id){
+    public function index(){
+        $prioritas_status = Status::all();
+        $prioritas_tugas = Priority::all();
+        $tugas = DB::table('tasks')
+            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
+            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
+            ->join('users as creators', 'tasks.id_creator', '=', 'creators.id') // Join untuk creator
+            ->join('jabatans', 'creators.jabatan_id', '=', 'jabatans.id')
+            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
+            ->select(
+                'tasks.id',
+                'tasks.id_creator',
+                'tasks.title_task',
+                'tasks.excerpt',
+                'statuses.name_status',
+                'priorities.name',
+                'statuses.bg_color',
+                'priorities.bg_color AS bg_warna',
+                'organizations.name AS department_name',
+                'creators.name AS name_user', // Menambahkan field untuk name_user
+                'jabatans.name AS name_jabatan' // Menambahkan field untuk name_jabatan
+            )
+            ->where('user_id', auth()->user()->id)
+            ->orderBy('tasks.updated_at', 'desc')
+            ->get();
+            
+        return view('layout.Staf.index', [
+            'active'    => 'my-task',
+            'open'      => '',
+            'task'      => $tugas,
+            'priority'  => 'none',
+            'prioritas_tugas' => $prioritas_tugas,
+            'prioritas_status'  => $prioritas_status
+        ]);
+    }
+
+    public function filter_by_priority($id){
         $tugas = DB::table('tasks')
             ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
             ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
@@ -56,7 +95,8 @@ class stafController extends Controller
 
             $priority = Priority::where('id','=',$id)->first();
             return view('layout.Staf.index', [
-                'active'    => 'filter-priority',
+                'active'    => 'my-task',
+                'open'      => 'filter-priority',
                 'task'      => $tugas,
                 'priority'  => $priority->name,
                 'prioritas_tugas'   => $prioritas_tugas,
@@ -64,7 +104,7 @@ class stafController extends Controller
             ]
         );
     }
-    public function getTugas($id){
+    public function filter_by_status($id){
         $prioritas_status = Status::all();
         $prioritas_tugas = Priority::all();
         $tugas = DB::table('tasks')
@@ -95,49 +135,14 @@ class stafController extends Controller
             $priority = Status::where('id','=',$id)->first();
 
         return view('layout.Staf.index', [
-            'active'    => 'filter-status',
+            'active'    => 'my-task',
+            'open'      => 'filter-status',
             'task'      => $tugas,
             'priority'  => $priority->name_status,
             'prioritas_tugas'   => $prioritas_tugas,
             'prioritas_status'  => $prioritas_status
         ]);
     }
-    public function details(){
-        $prioritas_status = Status::all();
-        $prioritas_tugas = Priority::all();
-        $tugas = DB::table('tasks')
-            ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
-            ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
-            ->join('users as creators', 'tasks.id_creator', '=', 'creators.id') // Join untuk creator
-            ->join('jabatans', 'creators.jabatan_id', '=', 'jabatans.id')
-            ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
-            ->select(
-                'tasks.id',
-                'tasks.id_creator',
-                'tasks.title_task',
-                'tasks.excerpt',
-                'statuses.name_status',
-                'priorities.name',
-                'statuses.bg_color',
-                'priorities.bg_color AS bg_warna',
-                'organizations.name AS department_name',
-                'creators.name AS name_user', // Menambahkan field untuk name_user
-                'jabatans.name AS name_jabatan' // Menambahkan field untuk name_jabatan
-            )
-            ->where('user_id', auth()->user()->id)
-            ->orderBy('tasks.updated_at', 'desc')
-            ->get();
-            
-        return view('layout.Staf.index', [
-            'active'    => 'task',
-            'task'      => $tugas,
-            'priority'  => 'none',
-            'prioritas_tugas' => $prioritas_tugas,
-            'prioritas_status'  => $prioritas_status
-        ]);
-    }
-
-   
     public function update(Request $request, $id){
         $validasi_data = $request->validate([
             'status_id'    => 'required'
@@ -179,10 +184,6 @@ class stafController extends Controller
         $prioritas_tugas = Priority::all();
         $priority = Priority::all()->first;
         $riwayat_tugas = riwayat_tugas::where('tugas_id','=',$id)->get()->first();
-        $status   = DB::table('statuses')
-        ->select('*')
-        ->where('role_id','=',3)
-        ->get();
 
         $tugas = DB::table('tasks')
             ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
@@ -196,6 +197,7 @@ class stafController extends Controller
                 'tasks.id',
                 'tasks.id_creator',
                 'statuses.bg_color',
+                'statuses.id AS id_status',
                 'priorities.bg_color AS bg_warna',
                 'tasks.title_task',
                 'tasks.excerpt',
@@ -211,9 +213,8 @@ class stafController extends Controller
     
         return view('layout.Staf.DetailTask', [
             'tugas_terkirim'    => $riwayat_tugas,
-            'status'            =>  $status,
             'priority'          =>  $priority,
-            'active'            => 'none',
+            'active'            => 'my-task',
             'task'              => $tugas->first(),
             'prioritas_tugas'   => $prioritas_tugas,
             'prioritas_status'  => $prioritas_status
@@ -229,7 +230,7 @@ class stafController extends Controller
 
         Alert::success('Good Job', 'Tugas Berhasil dipending');
     
-        return redirect()->route('user_staf.show', $id);
+        return redirect()->route('my-task.show', $id);
 
     }
     
@@ -244,7 +245,7 @@ class stafController extends Controller
 
         Alert::success('Good Job', 'Tugas Siap Dikerjakan');
     
-        return redirect()->route('user_staf.show', $id);
+        return redirect()->route('my-task.show', $id);
 
     }
 
@@ -255,7 +256,7 @@ class stafController extends Controller
             'status_id' => $status_id
         ]);
     
-        return redirect()->route('DetailTask.show', $id)->with(['success' => 'Task Was Approved']);
+        return redirect()->route('task-duties.show', $id)->with(['success' => 'Task Was Approved']);
 
     }
 
@@ -275,6 +276,6 @@ class stafController extends Controller
         $riwayat_tugas->update([
             'revision'  => $data['revision']
         ]);
-        return redirect()->route('DetailTask.show', $data['tugas_id'])->with(['success' => 'submission needs to be revised']);
+        return redirect()->route('task-duties.show', $data['tugas_id'])->with(['success' => 'submission needs to be revised']);
     }
 }

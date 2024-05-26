@@ -4,19 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | DataTables</title>
+    <title>AdminLTE 3 | ChartJS</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('AdminLTE-3.2.0') }}/plugins/fontawesome-free/css/all.min.css">
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet"
-        href="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet"
-        href="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('AdminLTE-3.2.0') }}/dist/css/adminlte.min.css">
 </head>
@@ -32,7 +26,7 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../../index3.html" class="nav-link">Home</a>
+                    <a href="{{ asset('AdminLTE-3.2.0') }}/index3.html" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -171,18 +165,19 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="../../index3.html" class="brand-link">
-                <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
+            <a href="{{ asset('AdminLTE-3.2.0') }}/index3.html" class="brand-link">
+                <img src="{{ asset('AdminLTE-3.2.0') }}/dist/img/AdminLTELogo.png" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">AdminLTE 3</span>
             </a>
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user (optional) -->
+                <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="../../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img src="{{ asset('AdminLTE-3.2.0') }}/dist/img/user2-160x160.jpg"
+                            class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">Alexander Pierce</a>
@@ -306,8 +301,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item menu-open">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-chart-pie"></i>
                                 <p>
                                     Charts
@@ -316,25 +311,25 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../charts/chartjs.html" class="nav-link">
+                                    <a href="chartjs.html" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>ChartJS</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../charts/flot.html" class="nav-link">
+                                    <a href="flot.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Flot</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../charts/inline.html" class="nav-link">
+                                    <a href="inline.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Inline</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../charts/uplot.html" class="nav-link">
+                                    <a href="uplot.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>uPlot</p>
                                     </a>
@@ -435,8 +430,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
                                     Tables
@@ -451,7 +446,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../tables/data.html" class="nav-link active">
+                                    <a href="../tables/data.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>DataTables</p>
                                     </a>
@@ -853,12 +848,12 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>DataTables</h1>
+                            <h1>ChartJS</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item active">DataTables</li>
+                                <li class="breadcrumb-item active">ChartJS</li>
                             </ol>
                         </div>
                     </div>
@@ -869,454 +864,143 @@
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-12">
-                            <!-- /.card -->
-
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">DataTable with default features</h3>
-                                </div>
-                                <!-- /.card-header -->
+                        <div class="col-md-6">
+                            <!-- AREA CHART -->
+                            <div class="card card-primary">
                                 <div class="card-body">
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Rendering engine</th>
-                                                <th>Browser</th>
-                                                <th>Platform(s)</th>
-                                                <th>Engine version</th>
-                                                <th>CSS grade</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>Internet
-                                                    Explorer 4.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td> 4</td>
-                                                <td>X</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>Internet
-                                                    Explorer 5.0
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>5</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>Internet
-                                                    Explorer 5.5
-                                                </td>
-                                                <td>Win 95+</td>
-                                                <td>5.5</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>Internet
-                                                    Explorer 6
-                                                </td>
-                                                <td>Win 98+</td>
-                                                <td>6</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>Internet Explorer 7</td>
-                                                <td>Win XP SP2+</td>
-                                                <td>7</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Trident</td>
-                                                <td>AOL browser (AOL desktop)</td>
-                                                <td>Win XP</td>
-                                                <td>6</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Firefox 1.0</td>
-                                                <td>Win 98+ / OSX.2+</td>
-                                                <td>1.7</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Firefox 1.5</td>
-                                                <td>Win 98+ / OSX.2+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Firefox 2.0</td>
-                                                <td>Win 98+ / OSX.2+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Firefox 3.0</td>
-                                                <td>Win 2k+ / OSX.3+</td>
-                                                <td>1.9</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Camino 1.0</td>
-                                                <td>OSX.2+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Camino 1.5</td>
-                                                <td>OSX.3+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Netscape 7.2</td>
-                                                <td>Win 95+ / Mac OS 8.6-9.2</td>
-                                                <td>1.7</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Netscape Browser 8</td>
-                                                <td>Win 98SE+</td>
-                                                <td>1.7</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Netscape Navigator 9</td>
-                                                <td>Win 98+ / OSX.2+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.0</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.1</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.1</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.2</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.2</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.3</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.3</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.4</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.4</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.5</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.5</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.6</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>1.6</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.7</td>
-                                                <td>Win 98+ / OSX.1+</td>
-                                                <td>1.7</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Mozilla 1.8</td>
-                                                <td>Win 98+ / OSX.1+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Seamonkey 1.1</td>
-                                                <td>Win 98+ / OSX.2+</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gecko</td>
-                                                <td>Epiphany 2.20</td>
-                                                <td>Gnome</td>
-                                                <td>1.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>Safari 1.2</td>
-                                                <td>OSX.3</td>
-                                                <td>125.5</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>Safari 1.3</td>
-                                                <td>OSX.3</td>
-                                                <td>312.8</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>Safari 2.0</td>
-                                                <td>OSX.4+</td>
-                                                <td>419.3</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>Safari 3.0</td>
-                                                <td>OSX.4+</td>
-                                                <td>522.1</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>OmniWeb 5.5</td>
-                                                <td>OSX.4+</td>
-                                                <td>420</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>iPod Touch / iPhone</td>
-                                                <td>iPod</td>
-                                                <td>420.1</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Webkit</td>
-                                                <td>S60</td>
-                                                <td>S60</td>
-                                                <td>413</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 7.0</td>
-                                                <td>Win 95+ / OSX.1+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 7.5</td>
-                                                <td>Win 95+ / OSX.2+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 8.0</td>
-                                                <td>Win 95+ / OSX.2+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 8.5</td>
-                                                <td>Win 95+ / OSX.2+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 9.0</td>
-                                                <td>Win 95+ / OSX.3+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 9.2</td>
-                                                <td>Win 88+ / OSX.3+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera 9.5</td>
-                                                <td>Win 88+ / OSX.3+</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Opera for Wii</td>
-                                                <td>Wii</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Nokia N800</td>
-                                                <td>N800</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Presto</td>
-                                                <td>Nintendo DS browser</td>
-                                                <td>Nintendo DS</td>
-                                                <td>8.5</td>
-                                                <td>C/A<sup>1</sup></td>
-                                            </tr>
-                                            <tr>
-                                                <td>KHTML</td>
-                                                <td>Konqureror 3.1</td>
-                                                <td>KDE 3.1</td>
-                                                <td>3.1</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>KHTML</td>
-                                                <td>Konqureror 3.3</td>
-                                                <td>KDE 3.3</td>
-                                                <td>3.3</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>KHTML</td>
-                                                <td>Konqureror 3.5</td>
-                                                <td>KDE 3.5</td>
-                                                <td>3.5</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tasman</td>
-                                                <td>Internet Explorer 4.5</td>
-                                                <td>Mac OS 8-9</td>
-                                                <td>-</td>
-                                                <td>X</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tasman</td>
-                                                <td>Internet Explorer 5.1</td>
-                                                <td>Mac OS 7.6-9</td>
-                                                <td>1</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tasman</td>
-                                                <td>Internet Explorer 5.2</td>
-                                                <td>Mac OS 8-X</td>
-                                                <td>1</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>NetFront 3.1</td>
-                                                <td>Embedded devices</td>
-                                                <td>-</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>NetFront 3.4</td>
-                                                <td>Embedded devices</td>
-                                                <td>-</td>
-                                                <td>A</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>Dillo 0.8</td>
-                                                <td>Embedded devices</td>
-                                                <td>-</td>
-                                                <td>X</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>Links</td>
-                                                <td>Text only</td>
-                                                <td>-</td>
-                                                <td>X</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>Lynx</td>
-                                                <td>Text only</td>
-                                                <td>-</td>
-                                                <td>X</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>IE Mobile</td>
-                                                <td>Windows Mobile 6</td>
-                                                <td>-</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Misc</td>
-                                                <td>PSP browser</td>
-                                                <td>PSP</td>
-                                                <td>-</td>
-                                                <td>C</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Other browsers</td>
-                                                <td>All others</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>U</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Rendering engine</th>
-                                                <th>Browser</th>
-                                                <th>Platform(s)</th>
-                                                <th>Engine version</th>
-                                                <th>CSS grade</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                    <div class="chart">
+                                        <canvas id="areaChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
                                 </div>
                                 <!-- /.card-body -->
                             </div>
                             <!-- /.card -->
+
+                            <!-- DONUT CHART -->
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">Donut Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="donutChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- PIE CHART -->
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h3 class="card-title">Pie Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="pieChart"
+                                        style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
                         </div>
-                        <!-- /.col -->
+                        <!-- /.col (LEFT) -->
+                        <div class="col-md-6">
+                            <!-- LINE CHART -->
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title">Line Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="lineChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- BAR CHART -->
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Bar Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="barChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                            <!-- STACKED BAR CHART -->
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Stacked Bar Chart</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart">
+                                        <canvas id="stackedBarChart"
+                                            style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+
+                        </div>
+                        <!-- /.col (RIGHT) -->
                     </div>
                     <!-- /.row -->
-                </div>
-                <!-- /.container-fluid -->
+                </div><!-- /.container-fluid -->
             </section>
             <!-- /.content -->
         </div>
@@ -1331,7 +1015,7 @@
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
+            <!-- Add Content Here -->
         </aside>
         <!-- /.control-sidebar -->
     </div>
@@ -1341,19 +1025,8 @@
     <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- DataTables  & Plugins -->
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/jszip/jszip.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <!-- ChartJS -->
+    <script src="{{ asset('AdminLTE-3.2.0') }}/plugins/chart.js/Chart.min.js"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('AdminLTE-3.2.0') }}/dist/js/adminlte.min.js"></script>
     <!-- AdminLTE for demo purposes -->
@@ -1361,22 +1034,184 @@
     <!-- Page specific script -->
     <script>
         $(function() {
-            $("#example1").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
-        });
+            /* ChartJS
+             * -------
+             * Here we will create a few charts using ChartJS
+             */
+
+            //--------------
+            //- AREA CHART -
+            //--------------
+
+            // Get context with jQuery - using jQuery's .get() method.
+            var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+
+            var areaChartData = {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                        label: 'Digital Goods',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    },
+                    {
+                        label: 'Electronics',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                ]
+            }
+
+            var areaChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }]
+                }
+            }
+
+            // This will get the first returned node in the jQuery collection.
+            new Chart(areaChartCanvas, {
+                type: 'line',
+                data: areaChartData,
+                options: areaChartOptions
+            })
+
+            //-------------
+            //- LINE CHART -
+            //--------------
+            var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+            var lineChartOptions = $.extend(true, {}, areaChartOptions)
+            var lineChartData = $.extend(true, {}, areaChartData)
+            lineChartData.datasets[0].fill = false;
+            lineChartData.datasets[1].fill = false;
+            lineChartOptions.datasetFill = false
+
+            var lineChart = new Chart(lineChartCanvas, {
+                type: 'line',
+                data: lineChartData,
+                options: lineChartOptions
+            })
+
+            //-------------
+            //- DONUT CHART -
+            //-------------
+            // Get context with jQuery - using jQuery's .get() method.
+            var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+            var donutData = {
+                labels: [
+                    'Chrome',
+                    'IE',
+                    'FireFox',
+                    'Safari',
+                    'Opera',
+                    'Navigator',
+                ],
+                datasets: [{
+                    data: [700, 500, 400, 600, 300, 100],
+                    backgroundColor: ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+                }]
+            }
+            var donutOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            new Chart(donutChartCanvas, {
+                type: 'doughnut',
+                data: donutData,
+                options: donutOptions
+            })
+
+            //-------------
+            //- PIE CHART -
+            //-------------
+            // Get context with jQuery - using jQuery's .get() method.
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieData = donutData;
+            var pieOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
+            //Create pie or douhnut chart
+            // You can switch between pie and douhnut using the method below.
+            new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
+            })
+
+            //-------------
+            //- BAR CHART -
+            //-------------
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChartData = $.extend(true, {}, areaChartData)
+            var temp0 = areaChartData.datasets[0]
+            var temp1 = areaChartData.datasets[1]
+            barChartData.datasets[0] = temp1
+            barChartData.datasets[1] = temp0
+
+            var barChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetFill: false
+            }
+
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            })
+
+            //---------------------
+            //- STACKED BAR CHART -
+            //---------------------
+            var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+            var stackedBarChartData = $.extend(true, {}, barChartData)
+
+            var stackedBarChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                }
+            }
+
+            new Chart(stackedBarChartCanvas, {
+                type: 'bar',
+                data: stackedBarChartData,
+                options: stackedBarChartOptions
+            })
+        })
     </script>
 </body>
-
-</html>
+</h{{ asset('AdminLTE-3.2.0') }}

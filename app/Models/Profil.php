@@ -13,6 +13,6 @@ class Profil extends Model
     protected $guarded = ['id'];
 
     public function users(){
-        return $this->hasMany(User::class);
+        return $this->hasOne(User::class);
     }
 }
