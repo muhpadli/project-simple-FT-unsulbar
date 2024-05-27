@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Jabatan | FT Unsulbar
+    Jabatan | FT SIMPLE
 @endsection
 @section('head')
     <style>
@@ -99,7 +99,7 @@
                                                 </div>
                                             @empty
                                                 <div class="alert alert-danger col-12">
-                                                    Daftar jabatan belum tersedia
+                                                    Daftar pegawai belum ada
                                                 </div>
                                             @endforelse
                                         </div>

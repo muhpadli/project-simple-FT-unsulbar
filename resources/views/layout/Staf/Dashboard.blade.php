@@ -47,22 +47,26 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <div class="card card-outline card-info">
-                <div class="card-header">
-                    <div class="card-title">
-                        My Task By Status
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card card-outline col-md-12">
+                        <div class="card-body">
+                            {!! $myTaskChart->container() !!}
+                        </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row justify-content-md-start">
+                <div class="col-md-7">
+                    <div class="row">
                         @for ($i = 0; $i < count($icon); $i++)
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-{{ $color[$i] }}">
-                                    <span class="info-box-icon"><i class="fa {{ $icon[$i] }}"></i></span>
+                            <div class="col-md-6">
+                                <div class="info-box shadow-small">
+                                    <span class="info-box-icon bg-{{ $color[$i] }}"><i
+                                            class="fa {{ $icon[$i] }}"></i></span>
+
                                     <div class="info-box-content">
                                         <span class="info-box-text">{{ $title_tugas[$i] }}</span>
-                                        <span class="info-box-number"><a style="text-decoration: none; color: white"
-                                                href="{{ route('detail-where-staus', $i + 1) }}">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
+                                        <span class="info-box-number"><a href="{{ route('detail-where-staus', $i + 1) }}"
+                                                style="color: black">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
                                     </div>
                                 </div>
                             </div>
@@ -72,4 +76,8 @@
             </div>
         </div>
     </section>
+@endsection
+@section('script')
+    <script src="{{ $myTaskChart->cdn() }}"></script>
+    {{ $myTaskChart->script() }}
 @endsection

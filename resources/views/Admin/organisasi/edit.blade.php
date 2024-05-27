@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Edit Organisasi| FT Unsulbar
+    Edit Organisasi| SIMPLE
 @endsection
 @section('content')
     <!-- Content Header (Page header) -->

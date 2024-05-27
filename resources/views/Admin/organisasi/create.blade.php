@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Tambah Organisasi| FT Unsulbar
+    Tambah Organisasi| SIMPLE
 @endsection
 @section('content')
     <section class="content-header">

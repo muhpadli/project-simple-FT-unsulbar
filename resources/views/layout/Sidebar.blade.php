@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-info elevation-4">
     <!-- Brand Logo -->
-    <a href="{{ asset('AdminLTE-3.2.0') }}/index3.html" class="brand-link  text-center">
+    <a href="" class="brand-link  text-center">
         <span class="brand-text font-weight-light protest-guerrilla-regular"><b>SIMPLE | Fakultas Teknik</b></span>
     </a>
 
@@ -48,16 +48,6 @@
                         </a>
                     </li>
                 @endif
-                <li class="nav-header">
-                    Lainnya
-                </li>
-                <li class="nav-item active">
-                    <a href="{{ url('/users') }}" class="nav-link">
-                        <i class="nav-icon fa fa-settings"></i>
-                        <p>Pengaduan
-                        </p>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

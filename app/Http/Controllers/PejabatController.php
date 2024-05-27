@@ -285,7 +285,6 @@ class PejabatController extends Controller
                 } 
             }
         }else{
-            dd('yah');
             $user->update([
                 'name'      => $data['nama'],
                 'email'     => $data['email'],
@@ -360,6 +359,36 @@ class PejabatController extends Controller
         return redirect()->route('task-duties.show',$id);
     }
 
-    
+    public function get_task_by_duties($id){
+        // $tugas = Task::all();
+        $prioritas_status = Status::all();
+        $prioritas_tugas = Priority::all();
+
+        $tugas = DB::table('tasks')
+                    ->join('statuses', 'statuses.id', '=', 'tasks.status_id')
+                    ->join('priorities', 'priorities.id', '=', 'tasks.priority_id')
+                    ->join('users', 'users.id', '=', 'tasks.user_id')
+                    ->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')
+                    ->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')
+                    ->select('tasks.id', 'tasks.status_id', 'users.name AS nameUser','statuses.bg_color','priorities.bg_color AS bg_warna','tasks.title_task', 'tasks.excerpt', 'statuses.name_status','priorities.name', 'organizations.name AS department')
+                    ->where([
+                        ['id_creator', '=', auth()->user()->id],
+                        ['user_id', '=', $id]
+                    ])
+                    ->orderBy('tasks.updated_at', 'desc')
+                    ->get();
+
+                    $priority = Priority::where('id','=',$id)->first();
+                    $tugasAll  = Task::all();
+        return view('layout.Pejabat.index', [
+            'open'      => 'none',
+            'active'    => 'task',
+            'task'      => $tugas,
+            'priority'  => "",
+            'prioritas_tugas'   =>  $prioritas_tugas,
+            'prioritas_status'   =>  $prioritas_status,
+            'tugasAll'  => $tugasAll
+        ]);
+    }
    
 }

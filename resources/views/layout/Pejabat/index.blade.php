@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Dashboard Pejabat | FT Unsulbar
+    Task Duties | SIMPLE
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -99,7 +99,7 @@
                                                 <td>
                                                     <a class="badge badge-info btn-sm"
                                                         href="{{ route('task-duties.show', $item->id) }}">
-                                                        <i class="fas fa-eye mr-2">View</i>
+                                                        <i class="fas fa-eye mr-1"></i>View
                                                     </a>
                                                 </td>
                                             </tr>

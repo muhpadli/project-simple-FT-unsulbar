@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    My Task | FT Unsulbar
+    My Task | SIMPLE
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -50,7 +50,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="card card-outline card-info ">
                         <!-- /.card-body -->
                         <div class="card-body ">
@@ -78,8 +78,8 @@
                                                     style="width: 75px;">{{ $item->name_status }}</span></td>
                                             <td>
                                                 <a href="{{ route('my-task.show', $item->id) }}"
-                                                    class="badge badge-primary p-1 btn-sm">
-                                                    <i class="fas fa-eye ml-2 mr-2">View</i>
+                                                    class="badge badge-info p-1 btn-sm">
+                                                    <i class="fas fa-eye mr-1"></i>View
                                                 </a>
                                             </td>
                                         </tr>
@@ -107,7 +107,7 @@
                         <!-- /.card-body -->
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card card-outline card-info p-2">
                         <div class="card-header">
                             <div class="card-title"><i class="fa fa-filter"></i>FILTER</div>

@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Detail User | FT Unsulbar
+    Page Profile | SIMPLE
 @endsection
 @section('head')
     <!-- SweetAlert2 -->

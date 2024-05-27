@@ -39,7 +39,7 @@ class OrganisasiFakultasChart
         ];
 
         return $this->chart->pieChart()
-            ->setTitle('Persentase Jabatan organisasi')
+            ->setTitle('Persentase Jabatan Organisasi')
             ->setSubtitle(date('Y'))
             ->addData($data)
             ->setLabels($label);

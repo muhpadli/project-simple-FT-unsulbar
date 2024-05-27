@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Tambah User | FT Unsulbar
+    Tambah User | SIMPLE
 @endsection
 @section('content')
     <section class="content-header">

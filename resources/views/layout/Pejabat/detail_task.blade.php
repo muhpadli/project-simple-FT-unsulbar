@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Detail Task | FT Unsulbar
+    Detail Task | SIMPLE
 @endsection
 @section('head')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -69,14 +69,13 @@
                         <!-- /.card-header -->
                         <div class="card-body ">
                             <div class="detail_task">
-                                <h5 class="subtitle pb-2"
-                                    style="border-bottom: 1px solid rgba(0, 0, 0, 0.2); font-weight: 600">
-                                    Description
-                                </h5>
-                                <p>{!! $task->deksripsi !!}</p>
-                                @if ($task->keterangan)
-                                    <p class="small pl-2 pt-0">Note : {{ $task->keterangan }}</p>
-                                @endif
+                                <label> Description </label>
+                                <div class="col-12 border mb-3" style="border-radius: 8px">
+                                    <p>{!! $task->deksripsi !!}</p>
+                                    @if ($task->keterangan)
+                                        <p class="small pl-0 mb-2">Note : {{ $task->keterangan }}</p>
+                                    @endif
+                                </div>
                             </div>
                             <div class="aksi-validasi d-flex">
                                 @if ($task->name_status == 'finish')
@@ -126,9 +125,7 @@
                                 @endif
                             </div>
                             <div class="submitted mt-3">
-                                <h5 class=" pb-2" style="border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700">
-                                    Submission status
-                                </h5>
+                                <label> Submission status </label>
                                 @if ($task->name_status == 'finish')
                                     <div class="alert alert-warning d-flex align-items-center">
                                         <div><i class="fas fa-exclamation-circle mr-2"></i></div>
@@ -140,51 +137,52 @@
                                         <div>Submission Was Approved</div>
                                     </div>
                                 @endif
-                                <table class="table table-bordered table-striped table-hover">
-                                    <tr>
-                                        <th class="col-3">Submission Status</th>
-                                        <td class="col-9">{{ Str::ucfirst($task->name_status) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="col-3">Submission Priority</th>
-                                        <td class="col-9">{{ Str::ucfirst($task->name) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class="col-3">Date Started</th>
-                                        @if ($task->name_status == 'register' || $task->name_status == 'pending')
-                                            <td class="col-9">Not Started</td>
-                                        @else
-                                            <td class="col-9">{{ $task->date_start }}</td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <th class="col-3">Completed Time</th>
-                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
-                                            <td class="col-9">{{ $tugas_terkirim->waktu_selesai }}</td>
-                                        @else
-                                            <td class="col-9">Not Completed</td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <th class="col3">Link Task</th>
-                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
-                                            <td class="col-9"><a href="{{ $tugas_terkirim->link_tugas }}"
-                                                    target="_blank">{{ $tugas_terkirim->link_tugas }}</a>
-                                            </td>
-                                        @else
-                                            <td class="col-9">{{ 'Not Link Task' }}</td>
-                                        @endif
-                                    </tr>
-                                    <tr>
-                                        <th class="col-3">Description Task</th>
-                                        @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
-                                            <td class="col-9">{!! $tugas_terkirim->keterangan !!}</td>
-                                        @else
-                                            <td class="col-9">{{ 'Not Link Task' }}</td>
-                                        @endif
-                                    </tr>
-
-                                </table>
+                                <div class="col-12 border p-0 mb-2">
+                                    <table class="table table-bordered table-striped table-hover m-0 ">
+                                        <tr>
+                                            <th class="col-3">Submission Status</th>
+                                            <td class="col-9">{{ Str::ucfirst($task->name_status) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-3">Submission Priority</th>
+                                            <td class="col-9">{{ Str::ucfirst($task->name) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-3">Date Started</th>
+                                            @if ($task->name_status == 'register' || $task->name_status == 'pending')
+                                                <td class="col-9">Not Started</td>
+                                            @else
+                                                <td class="col-9">{{ $task->date_start }}</td>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                            <th class="col-3">Completed Time</th>
+                                            @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
+                                                <td class="col-9">{{ $tugas_terkirim->waktu_selesai }}</td>
+                                            @else
+                                                <td class="col-9">Not Completed</td>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                            <th class="col3">Link Task</th>
+                                            @if ($task->name_status == 'finish' || $task->name_status == 'accepted' || $task->name_status == 'revisi')
+                                                <td class="col-9"><a href="{{ $tugas_terkirim->link_tugas }}"
+                                                        target="_blank">{{ $tugas_terkirim->link_tugas }}</a>
+                                                </td>
+                                            @else
+                                                <td class="col-9">{{ 'Not Link Task' }}</td>
+                                            @endif
+                                        </tr>
+                                        <tr>
+                                            <th class="col-3">Description Task</th>
+                                            @if ($task->name_status == 'finish' || $task->name_status == 'accepted' || $task->name_status == 'revisi')
+                                                <td class="col-9">{!! $tugas_terkirim->keterangan !!}</td>
+                                            @else
+                                                <td class="col-9">{{ 'Not Description Task' }}</td>
+                                            @endif
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

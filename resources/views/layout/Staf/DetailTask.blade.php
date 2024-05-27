@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Detail Task | FT Unsulbar
+    Detail Task | SIMPLE
 @endsection
 @section('head')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
@@ -54,13 +54,13 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-3 ml-3">
-                            <h5 style="margin: 0; border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700"
-                                class="pb-2">Description</h5>
-                            <p style="text-align: justify">{!! $task->deksripsi !!}</p>
-                            @if ($task->keterangan)
-                                <p class="small">Note : {{ $task->keterangan }}</p>
-                            @endif
-
+                            <label style="margin: 0; font-weight: 700" class="pb-2 mt-1">Description</label>
+                            <div class="col-12 border rounded-3 " style="border-radius: 8px">
+                                <p style="text-align: justify">{!! $task->deksripsi !!}</p>
+                                @if ($task->keterangan)
+                                    <p class="small mt-3" style="line-height: 0px">Note : {{ $task->keterangan }}</p>
+                                @endif
+                            </div>
                             <div class="mt-3 ">
                                 @if ($task->name_status == 'register')
                                     {{-- aksi saat status masih register --}}
@@ -128,27 +128,27 @@
                                     </form>
                                 @endif
                             </div>
-                            <h5 class="mt-3" style="border-bottom: 1px solid rgba(0,0,0,0.2); font-weight: 700">Submission
-                                Status</h5>
-                            <div class="col-md-12">
-                                {{-- alert by status --}}
-                                @if ($task->name_status == 'finish')
-                                    <div class="alert alert-info d-flex align-items-center">
-                                        <div><i class="fas fa-exclamation-circle mr-2"></i></div>
-                                        <div>Submission Not Validated</div>
-                                    </div>
-                                @elseif ($task->name_status == 'accepted')
-                                    <div class="alert alert-success d-flex align-items-center">
-                                        <div><i class="fas fa-check-circle mr-2"></i></div>
-                                        <div>Submission Was Approved</div>
-                                    </div>
-                                @elseif ($task->name_status == 'revisi')
-                                    <div class="alert alert-warning d-flex align-items-center">
-                                        <div><i class="fas fa-exclamation-circle mr-2"></i></div>
-                                        <div>submission needs to be revised</div>
-                                    </div>
-                                @endif
-                                <table class=" table table-striped table-bordered table-hover ml-0 ">
+
+                            <label class="mt-3">Submission Status</label>
+                            {{-- alert by status --}}
+                            @if ($task->name_status == 'finish')
+                                <div class="alert alert-info d-flex align-items-center">
+                                    <div><i class="fas fa-exclamation-circle mr-2"></i></div>
+                                    <div>Submission Not Validated</div>
+                                </div>
+                            @elseif ($task->name_status == 'accepted')
+                                <div class="alert alert-success d-flex align-items-center">
+                                    <div><i class="fas fa-check-circle mr-2"></i></div>
+                                    <div>Submission Was Approved</div>
+                                </div>
+                            @elseif ($task->name_status == 'revisi')
+                                <div class="alert alert-warning d-flex align-items-center">
+                                    <div><i class="fas fa-exclamation-circle mr-2"></i></div>
+                                    <div>submission needs to be revised</div>
+                                </div>
+                            @endif
+                            <div class="col-md-12 border p-0 mb-3">
+                                <table class="table table-striped table-bordered table-hover m-0">
                                     <tbody>
                                         <tr>
                                             <th class="col-3">Submission Status</th>
@@ -173,7 +173,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th class="col-3">Due Date</th>
+                                            <th class="col-3">Completed Time</th>
                                             <td class="col-9">
                                                 @if ($task->name_status == 'finish' || $task->name_status == 'accepted')
                                                     {{ $tugas_terkirim->waktu_selesai }}
@@ -196,7 +196,7 @@
                                             <th class="col-3">Description Link Task</th>
                                             <td class="col-9">
                                                 @if ($task->name_status === 'register' || $task->name_status === 'on progres' || $task->name_status == 'pending')
-                                                    {{ 'Not Link Task' }}
+                                                    {{ 'Not Description Task' }}
                                                 @else
                                                     {!! $tugas_terkirim->keterangan !!}
                                                 @endif

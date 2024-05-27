@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\MyTaskStatusChart;
 use App\Charts\OrganisasiFakultasChart;
+use App\Charts\TaskDutiesChart;
+use App\Models\jabatan;
 use App\Models\Organization;
 use App\Models\Priority;
 use App\Models\Status;
@@ -13,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function index(OrganisasiFakultasChart $organisasiFakultasChart)
+    public function index(OrganisasiFakultasChart $organisasiFakultasChart, MyTaskStatusChart $myTaskStatusChart, TaskDutiesChart $taskDutiesChart)
     {
         $user_id = auth()->user()->id;
         $user = User::findOrFail($user_id);
@@ -38,19 +41,35 @@ class DashboardController extends Controller
                     'priority' => 'none',
                     'prioritas_tugas' => $prioritas_tugas,
                     'prioritas_status' => $prioritas_status,
+                    'myTaskChart' => $myTaskStatusChart->build(),
                 ]);
             } else {
                 $tugas = DB::table('tasks')->join('statuses', 'statuses.id', '=', 'tasks.status_id')->join('priorities', 'priorities.id', '=', 'tasks.priority_id')->join('users', 'users.id', '=', 'tasks.user_id')->join('jabatans', 'users.jabatan_id', '=', 'jabatans.id')->join('organizations', 'organizations.id', '=', 'jabatans.organisasi_id')->select('tasks.id', 'tasks.title_task', 'tasks.excerpt', 'statuses.name_status', 'priorities.name', 'organizations.name AS department')->get();
-
-                $task = Task::all()->where('id_creator', '=', auth()->user()->id);
-                $prioritas_tugas = Priority::all();
-                $prioritas_status = status::all();
+                $tasksByMe = Task::select('user_id')->where('id_creator', '=', auth()->user()->id)->get();
+                $tasks = Task::select('user_id')->where('id_creator', '=', auth()->user()->id)->groupBy('user_id')->get();
+                $listName = [];
+                $sumTask = [];
+                $nameJabatans = [];
+                foreach ($tasks as $key => $task) {
+                    $sum = 0;
+                    foreach ($tasksByMe as $key => $taskme) {
+                        if($task->user_id == $taskme->user_id){
+                            $sum++;
+                        }
+                    }
+                    $user = User::findOrFail($task->user_id);
+                    $nameJabatans[] = jabatan::findOrFail($user->jabatan_id)->name;
+                    $listName[] = $user;
+                    $sumTask[] = $sum;
+                }
                 return view('layout.Pejabat.Dashboard', [
-                    'active' => 'beranda',
-                    'task' => $task,
-                    'priority' => 'none',
-                    'prioritas_tugas' => $prioritas_tugas,
-                    'prioritas_status' => $prioritas_status,
+                    'active'            => 'beranda',
+                    'name_jabatan'      => $nameJabatans,
+                    'dutiesName'        => $listName, 
+                    'sumTask'           => $sumTask, 
+                    'tasksByMe'         => $tasksByMe,
+                    'myTaskChart'       => $myTaskStatusChart->build(),
+                    'taskDutiesChart'   => $taskDutiesChart->build()
                 ]);
             } 
         }

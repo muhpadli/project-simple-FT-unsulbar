@@ -13,7 +13,17 @@
 
 @extends('Master')
 @section('title')
-    Dashboard Pimpinan| FT Unsulbar
+    Dashboard | SIMPLE
+@endsection
+@section('head')
+    <style>
+        .jabatan {
+            background-position: center;
+            background-size: cover;
+            height: 62px;
+            margin: 0
+        }
+    </style>
 @endsection
 @section('content')
     @php
@@ -45,49 +55,28 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <div class="card card-outline card-info">
-                <div class="card-header">
-                    <div class="card-title">
-                        Task Duties By Status
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row justify-content-md-start">
-                        @for ($i = 0; $i < count($icon); $i++)
-                            <div class="col-md-3 col-sm-6 col-12">
-                                <div class="info-box bg-gradient-{{ $color[$i] }}">
-                                    <span class="info-box-icon"><i class="fa {{ $icon[$i] }}"></i></span>
-
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">{{ $title_tugas[$i] }}</span>
-                                        <span class="info-box-number"><a style="text-decoration: none; color: white"
-                                                href="{{ route('get-task-by-status', $i + 1) }}">{{ $task->where('status_id', '=', $i + 1)->count() }}</a></span>
-                                    </div>
-                                    <!-- /.info-box-content -->
-                                </div>
-                                <!-- /.info-box -->
-                            </div>
-                        @endfor
-                    </div>
-                </div>
-            </div>
             @if ($level_user_id->tingkat > 1)
-                <div class="card card-outline card-info">
-                    <div class="card-header">
-                        <div class="card-title">
-                            My Task By Status
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card card-outline col-md-12">
+                            <div class="card-body">
+                                {!! $myTaskChart->container() !!}
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row justify-content-md-start">
+                    <div class="col-md-8">
+                        <div class="row">
                             @for ($i = 0; $i < count($icon); $i++)
-                                <div class="col-md-3 col-sm-6 col-12">
-                                    <div class="info-box bg-gradient-{{ $color[$i] }}">
-                                        <span class="info-box-icon"><i class="fa {{ $icon[$i] }}"></i></span>
+                                <div class="col-md-6">
+                                    <div class="info-box shadow-small">
+                                        <span class="info-box-icon bg-{{ $color[$i] }}"><i
+                                                class="fa {{ $icon[$i] }}"></i></span>
+
                                         <div class="info-box-content">
                                             <span class="info-box-text">{{ $title_tugas[$i] }}</span>
-                                            <span class="info-box-number"><a style="text-decoration: none; color: white"
-                                                    href="{{ route('detail-where-staus', $i + 1) }}">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
+                                            <span class="info-box-number"><a
+                                                    href="{{ route('detail-where-staus', $i + 1) }}"
+                                                    style="color: black">{{ auth()->user()->tasks->where('status_id', '=', $i + 1)->count() }}</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -96,6 +85,46 @@
                     </div>
                 </div>
             @endif
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-outline">
+                        <div class="card-body">
+                            {!! $taskDutiesChart->container() !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        @foreach ($dutiesName as $key => $item)
+                            <div class="col-md-6">
+                                <div class="info-box shadow-small">
+                                    @if (!empty($item->image))
+                                        <span class="info-box-icon shadow jabatan p-0 m-0"
+                                            style="background-image: url({{ asset('storage/' . $item->image) }})">
+                                        </span>
+                                    @else
+                                        <span class="info-box-icon shadow bg-info  p-0 m-0">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    @endif
+
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">{{ $item->name }} / {{ $name_jabatan[$key] }}</span>
+                                        <span class="info-box-number"><a href="{{ route('getTask-byStaff', $item->id) }}"
+                                                style="color: black">{{ $sumTask[$key] }}</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+@endsection
+@section('script')
+    <script src="{{ $myTaskChart->cdn() }}"></script>
+    {{ $myTaskChart->script() }}
+    <script src="{{ $taskDutiesChart->cdn() }}"></script>
+    {{ $taskDutiesChart->script() }}
 @endsection

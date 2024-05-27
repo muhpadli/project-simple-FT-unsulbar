@@ -51,6 +51,7 @@ Route::prefix('users')->group(function () {
     Route::prefix('task-duties')->group(function(){
         Route::get('/filter-by-priority/index={id}', [PejabatController::class, 'get_task_by_priority'])->name('get-task-by-priority')->middleware('auth');
         Route::get('/filter-by-status/index={id}', [PejabatController::class, 'get_task_by_status'])->name('get-task-by-status')->middleware('auth');
+        Route::get('/filter-by-name-staf/{id}',[PejabatController::class, 'get_task_by_duties'])->name('getTask-byStaff')->middleware('auth');
         // url get jabatan & user untuk keperluan dropdown create & edit task
         Route::get('get-jabatan/{id}', [TaskController::class, 'getJabatan']);
         Route::get('get-user/{id}', [TaskController::class, 'getUser']);

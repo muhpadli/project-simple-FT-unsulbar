@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Edit Task| FT Unsulbar
+    Edit Task| SIMPLE
 @endsection
 @section('head')
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>

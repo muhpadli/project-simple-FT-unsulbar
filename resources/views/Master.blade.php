@@ -104,7 +104,7 @@
         <!-- /.content-wrapper -->
 
         <footer class="main-footer">
-            <strong>Copyright &copy; 2024<a href="https://adminlte.io"> KPI Prodi Informatika 2024</a>.</strong> All
+            <strong>Copyright &copy; 2024<a href=""> KPI Prodi Informatika 2024</a>.</strong> All
             rights
             reserved.
         </footer>

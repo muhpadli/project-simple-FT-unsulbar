@@ -1,6 +1,6 @@
 @extends('Master')
 @section('title')
-    Detail User | FT Unsulbar
+    Detail User | SIMPLE
 @endsection
 @section('content')
     <!-- Content Header (Page header) -->
